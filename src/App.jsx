@@ -11,22 +11,24 @@ import { LoginPage } from './components/LoginPage'
 // ═══ ICONS (inline SVGs) ═══
 const Icons = {
   logo: (
-    <svg viewBox="0 0 100 100" fill="none" className="app-logo">
+    <svg viewBox="0 0 24 24" fill="none" className="app-logo">
       <defs>
         <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffa116" />
-          <stop offset="100%" stopColor="#ff375f" />
+          <stop offset="0%" stopColor="#ff85a1"/>
+          <stop offset="50%" stopColor="#d946ef"/>
+          <stop offset="100%" stopColor="#a855f7"/>
         </linearGradient>
         <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
           <feMerge>
             <feMergeNode in="coloredBlur"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
       </defs>
-      <path d="M20 80 V20 L50 60 L80 20 V80" stroke="url(#logoGrad)" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)"/>
-      <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" strokeWidth="4" opacity="0.3" filter="url(#glow)"/>
+      <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="url(#logoGrad)" strokeWidth="1.5" fill="none" filter="url(#glow)"/>
+      <path d="M12 2v20M3 7l9 5 9-5M3 17l9-5 9 5" stroke="url(#logoGrad)" strokeWidth="1" opacity="0.5"/>
+      <circle cx="12" cy="12" r="2.5" fill="url(#logoGrad)" opacity="0.8"/>
     </svg>
   ),
   grid: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
@@ -425,18 +427,16 @@ export default function App() {
     return () => window.removeEventListener('mousemove', handleReign);
   }, [cinematicPhase]);
   
-  // Easter Egg Listener — Chhavi-Exclusive Secret Codes
+  // Easter Egg Listener — Global Secret Codes
   useEffect(() => {
-    if (authState !== 'app') return;
-
     let keys = '';
     const secrets = {
-      // Main cinematic sequence — works for everyone
+      // Main cinematic sequence — works for everyone, triggers from ANYWHERE
       chhavi: () => { if (cinematicPhase === 0) runCinematicSequence(); },
       
       // ═══ CHHAVI-EXCLUSIVE EASTER EGGS ═══
       gorgeous: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return; // Allow even if not fully logged in yet if global
         // Screen blushes pink like her cheeks
         document.body.classList.add('blush-effect');
         // Spawn floating compliment
@@ -444,24 +444,24 @@ export default function App() {
         setTimeout(() => document.body.classList.remove('blush-effect'), 5000);
       },
       iloveyou: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return;
         triggerShootingStars();
         setTimeout(() => spawnFloatingText('To the moon and back 🌙', '#fcd34d'), 1000);
       },
       princess: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return;
         // Golden confetti explosion
         triggerConfetti();
         spawnFloatingText('👑 The Queen Has Arrived 👑', '#fbbf24');
       },
       aurora: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return;
         // Northern lights effect across the screen
         document.body.classList.add('aurora-effect');
         setTimeout(() => document.body.classList.remove('aurora-effect'), 8000);
       },
       forever: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return;
         // Love notes float up from bottom
         const notes = [
           'You make my code compile on the first try 💝',
@@ -475,7 +475,7 @@ export default function App() {
         });
       },
       heartbeat: () => {
-        if (currentUser !== 'chhavi') return;
+        if (currentUser !== 'chhavi' && currentUser !== null) return;
         // Screen pulses like a heartbeat
         document.body.classList.add('heartbeat-effect');
         spawnFloatingText('💓 My heart beats for you 💓', '#fb7185');
@@ -643,26 +643,101 @@ export default function App() {
 
   if (!appReady) return <div className="loading-screen text-white flex items-center justify-center min-h-screen bg-black text-2xl font-bold tracking-widest animate-pulse">Initializing Mirei Architecture...</div>;
 
-  if (authState === 'landing') {
-    return <LandingPage onGetStarted={() => setAuthState('login')} />;
-  }
+  const renderContent = () => {
+    if (authState === 'landing') {
+      return <LandingPage onGetStarted={() => setAuthState('login')} />;
+    }
 
-  if (authState === 'login') {
-    return <LoginPage onLogin={handleLogin} />;
-  }
+    if (authState === 'login') {
+      return <LoginPage onLogin={handleLogin} />;
+    }
+
+    return (
+      <div className={`app-layout ${cinematicPhase === 1 ? 'smooth-terminal-active' : ''}`}>
+        <video autoPlay loop muted playsInline id="bg-video" key={cinematicPhase > 1 ? 'cinematic' : 'dreamy'}>
+          <source src={
+            cinematicPhase > 1
+              ? "https://upload.wikimedia.org/wikipedia/commons/transcode/9/9b/Ink-Water-Abstract.webm/Ink-Water-Abstract.webm.1080p.vp9.webm"
+              : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
+          } type="video/webm" />
+        </video>
+
+        <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+          <div className="sidebar-logo">
+            {Icons.logo}
+            <h1>MIREI</h1>
+          </div>
+          <nav className="sidebar-nav">
+            {navItems.map(item => (
+              <button key={item.id} className={`nav-item ${view === item.id ? 'active' : ''}`}
+                onClick={() => { setView(item.id); setSidebarOpen(false); }}>
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-footer">
+            <div className="sidebar-streak">
+              <span className="fire" style={{ color: 'var(--yellow)', filter: 'drop-shadow(0 0 8px var(--yellow))' }}>{Icons.fire}</span>
+              <span>{streak} day streak</span>
+            </div>
+            <div className="sidebar-progress">
+              <div className="sidebar-progress-bar" style={{ width: `${(totalQuestions > 0 ? totalSolved / totalQuestions : 0) * 100}%` }} />
+            </div>
+            <div className="sidebar-progress-text">{totalSolved} / {totalQuestions} solved</div>
+            <button className="sidebar-settings" onClick={() => setShowSettings(true)}>
+              {Icons.settings}
+              <span>Settings</span>
+            </button>
+          </div>
+        </aside>
+
+        <div className="main-area">
+          <header className="topbar">
+            <button className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              {Icons.menu}
+            </button>
+            <div className="topbar-breadcrumb">
+              DSA Master / <span>{navItems.find(n => n.id === view)?.label}</span>
+            </div>
+            <div className="topbar-search">
+              {Icons.search}
+              <input placeholder="Search questions..." value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && searchQuery) { setView('practice'); }}} />
+            </div>
+            <div className="topbar-right">
+              {isChhavisVersion && (
+                <span className="chhavis-version-tag" onClick={() => setRainHearts(!rainHearts)} title="Toggle Infinite Heart Rain" style={{ cursor: 'pointer' }}>
+                  ❤️ [ {rainHearts ? 'Rain Active' : "Chhavi's Version"} ]
+                </span>
+              )}
+              <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>
+                {easySolved}E / {medSolved}M / {hardSolved}H
+              </span>
+            </div>
+          </header>
+
+          <main className="main-content">
+            {view === 'dashboard' && <Dashboard {...{ totalSolved, totalQuestions, easySolved, medSolved, hardSolved, streak, longestStreak, username, setUsername, heatmapData, lastActivity, openQuestion, solvedIds }} />}
+            {view === 'learn' && <Learn questions={QUESTIONS} openQuestion={openQuestion} />}
+            {view === 'practice' && <Practice {...{ questions: QUESTIONS, selectedQuestion, setSelectedQuestion: openQuestion, solvedIds, bookmarkedIds, notes, markSolved, toggleBookmark, saveNote, searchQuery, addActivity }} />}
+            {view === 'company' && <CompanyPrep {...{ openQuestion }} />}
+            {view === 'planner' && <PrepPlanner />}
+            {view === 'cheatsheet' && <Cheatsheet />}
+            {view === 'patterns' && <PatternFinder />}
+            {view === 'skillbuilder' && <SkillBuilder />}
+            {view === 'tutor' && <AITutor />}
+          </main>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className={`app-layout ${cinematicPhase === 1 ? 'smooth-terminal-active' : ''}`}>
-      {/* Background Videos */}
-      <video autoPlay loop muted playsInline id="bg-video" key={cinematicPhase > 1 ? 'cinematic' : 'dreamy'}>
-        <source src={
-          cinematicPhase > 1
-            ? "https://upload.wikimedia.org/wikipedia/commons/transcode/9/9b/Ink-Water-Abstract.webm/Ink-Water-Abstract.webm.1080p.vp9.webm"
-            : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
-        } type="video/webm" />
-      </video>
+    <>
+      {renderContent()}
 
-      {/* Infinite Rain Component Overlay */}
       {rainHearts && (
         <div className="infinite-rain-overlay">
           {Array.from({ length: 45 }).map((_, i) => (
@@ -676,11 +751,8 @@ export default function App() {
         </div>
       )}
 
-      {/* The Ultimate Cinematic Sequence */}
       {cinematicPhase > 0 && (
         <div className="ultimate-cinematic-container">
-          
-          {/* Phase 1: Hacker Pitch Black Termial */}
           {cinematicPhase === 1 && (
             <div className="hacker-terminal">
               <div className="typewriter-line1">{'> "People think I built this platform to master code..."'}</div>
@@ -689,7 +761,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Phase 2+: The Ink & Stars Shift */}
           {cinematicPhase > 1 && (
             <>
               <div className="cinematic-blur-overlay"></div>
@@ -723,7 +794,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Advanced Settings Drawer */}
       <div className={`settings-overlay ${showSettings ? 'open' : ''}`} onClick={() => setShowSettings(false)} />
       <div className={`settings-drawer ${showSettings ? 'open' : ''}`}>
         <div className="settings-drawer-header">
@@ -751,6 +821,7 @@ export default function App() {
               onChange={e => setApiKeyInput(e.target.value)}
             />
             <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
+              // Note: the original had saveApiKey here, and setApiKey later.
               setApiKey(apiKeyInput);
               alert('API Key Saved (local storage)');
             }}>Save Configuration</button>
@@ -793,84 +864,13 @@ export default function App() {
           </div>
 
           <p className="text-sm" style={{color: 'var(--text2)', marginTop: 'auto', lineHeight: 1.5, fontSize: '12px'}}>
-            UI State: Enchanted Vibe.<br/>
+            UI State: {isChhavisVersion ? 'Enchanted Vibe' : 'Standard Core'}.<br/>
             Running Pyodide WASM Runtime.<br/>
             Build: MIREI Alpha-2.5
           </p>
         </div>
       </div>
-
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-logo">
-          {Icons.logo}
-          <h1>MIREI</h1>
-        </div>
-        <nav className="sidebar-nav">
-          {navItems.map(item => (
-            <button key={item.id} className={`nav-item ${view === item.id ? 'active' : ''}`}
-              onClick={() => { setView(item.id); setSidebarOpen(false); }}>
-              {item.icon}
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-footer">
-          <div className="sidebar-streak">
-            <span className="fire" style={{ color: 'var(--yellow)', filter: 'drop-shadow(0 0 8px var(--yellow))' }}>{Icons.fire}</span>
-            <span>{streak} day streak</span>
-          </div>
-          <div className="sidebar-progress">
-            <div className="sidebar-progress-bar" style={{ width: `${(totalSolved / totalQuestions) * 100}%` }} />
-          </div>
-          <div className="sidebar-progress-text">{totalSolved} / {totalQuestions} solved</div>
-          <button className="sidebar-settings" onClick={() => setShowSettings(true)}>
-            {Icons.settings}
-            <span>Settings</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <div className="main-area">
-        <header className="topbar">
-          <button className="hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            {Icons.menu}
-          </button>
-          <div className="topbar-breadcrumb">
-            DSA Master / <span>{navItems.find(n => n.id === view)?.label}</span>
-          </div>
-          <div className="topbar-search">
-            {Icons.search}
-            <input placeholder="Search questions..." value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && searchQuery) { setView('practice'); }}} />
-          </div>
-          <div className="topbar-right">
-            {isChhavisVersion && (
-              <span className="chhavis-version-tag" onClick={() => setRainHearts(!rainHearts)} title="Toggle Infinite Heart Rain" style={{ cursor: 'pointer' }}>
-                ❤️ [ {rainHearts ? 'Rain Active' : "Chhavi's Version"} ]
-              </span>
-            )}
-            <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>
-              {easySolved}E / {medSolved}M / {hardSolved}H
-            </span>
-          </div>
-        </header>
-
-        <main className="main-content">
-          {view === 'dashboard' && <Dashboard {...{ totalSolved, totalQuestions, easySolved, medSolved, hardSolved, streak, longestStreak, username, setUsername, heatmapData, lastActivity, openQuestion, solvedIds }} />}
-          {view === 'learn' && <Learn questions={QUESTIONS} openQuestion={openQuestion} />}
-          {view === 'practice' && <Practice {...{ questions: QUESTIONS, selectedQuestion, setSelectedQuestion: openQuestion, solvedIds, bookmarkedIds, notes, markSolved, toggleBookmark, saveNote, searchQuery, addActivity }} />}
-          {view === 'company' && <CompanyPrep {...{ openQuestion }} />}
-          {view === 'planner' && <PrepPlanner />}
-          {view === 'cheatsheet' && <Cheatsheet />}
-          {view === 'patterns' && <PatternFinder />}
-          {view === 'skillbuilder' && <SkillBuilder />}
-          {view === 'tutor' && <AITutor />}
-        </main>
-      </div>
-    </div>
+    </>
   );
 }
 
