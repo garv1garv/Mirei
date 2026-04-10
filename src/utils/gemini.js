@@ -20,7 +20,7 @@ export function getApiKey() {
   return apiKey;
 }
 
-const MODEL_NAME = 'gemini-1.5-flash';
+const MODEL_NAME = 'gemini-2.5-flash';
 
 /**
  * Calls Gemini API for single turn generation.
