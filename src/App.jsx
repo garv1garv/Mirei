@@ -430,39 +430,36 @@ export default function App() {
   // Easter Egg Listener — Global Secret Codes
   useEffect(() => {
     let keys = '';
+    const isChhavi = () => currentUser === 'chhavi' || currentUser === null;
+    
     const secrets = {
       // Main cinematic sequence — works for everyone, triggers from ANYWHERE
       chhavi: () => { if (cinematicPhase === 0) runCinematicSequence(); },
       
       // ═══ CHHAVI-EXCLUSIVE EASTER EGGS ═══
       gorgeous: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return; // Allow even if not fully logged in yet if global
-        // Screen blushes pink like her cheeks
+        if (!isChhavi()) return;
         document.body.classList.add('blush-effect');
-        // Spawn floating compliment
         spawnFloatingText('You\'re gorgeous, Chhavi ✨', '#ff85a1');
         setTimeout(() => document.body.classList.remove('blush-effect'), 5000);
       },
       iloveyou: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return;
+        if (!isChhavi()) return;
         triggerShootingStars();
         setTimeout(() => spawnFloatingText('To the moon and back 🌙', '#fcd34d'), 1000);
       },
       princess: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return;
-        // Golden confetti explosion
+        if (!isChhavi()) return;
         triggerConfetti();
         spawnFloatingText('👑 The Queen Has Arrived 👑', '#fbbf24');
       },
       aurora: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return;
-        // Northern lights effect across the screen
+        if (!isChhavi()) return;
         document.body.classList.add('aurora-effect');
         setTimeout(() => document.body.classList.remove('aurora-effect'), 8000);
       },
       forever: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return;
-        // Love notes float up from bottom
+        if (!isChhavi()) return;
         const notes = [
           'You make my code compile on the first try 💝',
           'My favorite bug is falling for you 🐛💕',
@@ -475,18 +472,87 @@ export default function App() {
         });
       },
       heartbeat: () => {
-        if (currentUser !== 'chhavi' && currentUser !== null) return;
-        // Screen pulses like a heartbeat
+        if (!isChhavi()) return;
         document.body.classList.add('heartbeat-effect');
         spawnFloatingText('💓 My heart beats for you 💓', '#fb7185');
         setTimeout(() => document.body.classList.remove('heartbeat-effect'), 6000);
+      },
+
+      // ═══ NEW INTERACTIVE EASTER EGGS ═══
+
+      // 🦋 Butterflies flutter across the screen
+      butterfly: () => {
+        if (!isChhavi()) return;
+        triggerButterflies();
+        spawnFloatingText('You give me butterflies 🦋', '#e879f9');
+      },
+
+      // ✨ Mouse leaves a sparkle trail for 10 seconds
+      sparkle: () => {
+        if (!isChhavi()) return;
+        triggerSparkleTrail();
+        spawnFloatingText('Everything you touch turns to magic ✨', '#fbbf24');
+      },
+
+      // 🌹 Rose petals gently fall from the top
+      jaan: () => {
+        if (!isChhavi()) return;
+        triggerRosePetals();
+        spawnFloatingText('Meri jaan, meri duniya 🌹', '#f43f5e');
+      },
+
+      // 💫 Her name appears as a constellation
+      starlight: () => {
+        if (!isChhavi()) return;
+        triggerConstellation();
+      },
+
+      // 💕 A giant heart forms from many tiny hearts
+      myheart: () => {
+        if (!isChhavi()) return;
+        triggerHeartFormation();
+      },
+
+      // 💌 A cute animated love letter appears
+      loveletter: () => {
+        if (!isChhavi()) return;
+        triggerLoveLetter();
+      },
+
+      // 😘 Kiss marks appear where you click for 8 seconds
+      kiss: () => {
+        if (!isChhavi()) return;
+        triggerKissMode();
+        spawnFloatingText('Muah! 😘💋', '#ff85a1');
+      },
+
+      // 🌌 Galaxy swirl with orbiting hearts
+      galaxy: () => {
+        if (!isChhavi()) return;
+        triggerGalaxySwirl();
+        spawnFloatingText('You are my entire universe 🌌', '#a78bfa');
+      },
+      
+      // 🌈 Rainbow wave washes across the screen
+      rainbow: () => {
+        if (!isChhavi()) return;
+        document.body.classList.add('rainbow-wave-effect');
+        spawnFloatingText('You color my world 🌈', '#f472b6');
+        setTimeout(() => document.body.classList.remove('rainbow-wave-effect'), 6000);
+      },
+
+      // 🧸 Cute bouncing emojis rain down
+      cutie: () => {
+        if (!isChhavi()) return;
+        triggerCuteRain();
+        spawnFloatingText('The cutest human alive 🧸', '#fda4af');
       },
     };
 
     const handleKeyDown = (e) => {
       if (e.key && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         keys += e.key.toLowerCase();
-        if (keys.length > 30) keys = keys.slice(-30);
+        if (keys.length > 40) keys = keys.slice(-40);
         
         Object.keys(secrets).forEach(secret => {
           if (keys.includes(secret)) {
@@ -550,6 +616,204 @@ export default function App() {
     el.style.left = 10 + Math.random() * 80 + '%';
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 6000);
+  };
+
+  // 🦋 Butterflies that flutter with natural wobble paths
+  const triggerButterflies = () => {
+    const butterflyEmojis = ['🦋', '🦋', '🦋', '🌸', '💜', '🦋'];
+    for (let i = 0; i < 15; i++) {
+      setTimeout(() => {
+        const b = document.createElement('div');
+        b.className = 'easter-butterfly';
+        b.textContent = butterflyEmojis[Math.floor(Math.random() * butterflyEmojis.length)];
+        b.style.left = Math.random() * 100 + 'vw';
+        b.style.top = 60 + Math.random() * 40 + 'vh';
+        b.style.fontSize = (18 + Math.random() * 20) + 'px';
+        b.style.animationDuration = `${4 + Math.random() * 4}s`;
+        b.style.animationDelay = `${Math.random() * 0.5}s`;
+        document.body.appendChild(b);
+        setTimeout(() => b.remove(), 9000);
+      }, i * 300);
+    }
+  };
+
+  // ✨ Sparkle trail follows mouse for 10 seconds
+  const triggerSparkleTrail = () => {
+    const sparkles = ['✨', '💖', '⭐', '💫', '🌟', '💕'];
+    let active = true;
+    const handler = (e) => {
+      if (!active) return;
+      const s = document.createElement('div');
+      s.className = 'sparkle-trail-particle';
+      s.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      s.style.left = e.pageX + 'px';
+      s.style.top = e.pageY + 'px';
+      s.style.fontSize = (10 + Math.random() * 16) + 'px';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 1500);
+    };
+    window.addEventListener('mousemove', handler);
+    setTimeout(() => { active = false; window.removeEventListener('mousemove', handler); }, 10000);
+  };
+
+  // 🌹 Rose petals gracefully falling
+  const triggerRosePetals = () => {
+    const petals = ['🌹', '🌸', '🌺', '💐', '🪻', '🌷'];
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'rose-petal-fall';
+        p.textContent = petals[Math.floor(Math.random() * petals.length)];
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.fontSize = (14 + Math.random() * 18) + 'px';
+        p.style.animationDuration = `${3 + Math.random() * 4}s`;
+        p.style.animationDelay = `${Math.random() * 2}s`;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 8000);
+      }, i * 150);
+    }
+  };
+
+  // 💫 Constellation that spells CHHAVI in stars
+  const triggerConstellation = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'constellation-overlay';
+    // Create starfield background
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'constellation-bg-star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.width = star.style.height = (1 + Math.random() * 3) + 'px';
+      overlay.appendChild(star);
+    }
+    // The name in glowing text
+    const nameEl = document.createElement('div');
+    nameEl.className = 'constellation-name';
+    nameEl.innerHTML = 'C&nbsp;H&nbsp;H&nbsp;A&nbsp;V&nbsp;I';
+    overlay.appendChild(nameEl);
+    const subEl = document.createElement('div');
+    subEl.className = 'constellation-subtitle';
+    subEl.textContent = '— written in the stars —';
+    overlay.appendChild(subEl);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 6000);
+  };
+
+  // 💕 Heart formation - tiny hearts arrange into a big heart shape
+  const triggerHeartFormation = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'heart-formation-overlay';
+    // Heart shape parametric equation
+    const heartPoints = [];
+    for (let t = 0; t < Math.PI * 2; t += 0.15) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      heartPoints.push({ x: x * 8 + window.innerWidth / 2, y: y * 8 + window.innerHeight / 2 - 40 });
+    }
+    heartPoints.forEach((pt, i) => {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'formation-mini-heart';
+        h.textContent = '❤️';
+        h.style.left = pt.x + 'px';
+        h.style.top = pt.y + 'px';
+        h.style.fontSize = '16px';
+        overlay.appendChild(h);
+      }, i * 60);
+    });
+    // After all hearts placed, show message in center
+    setTimeout(() => {
+      const msg = document.createElement('div');
+      msg.className = 'heart-formation-msg';
+      msg.textContent = 'You fill my heart completely 💕';
+      overlay.appendChild(msg);
+    }, heartPoints.length * 60 + 500);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 8000);
+  };
+
+  // 💌 Animated love letter that opens
+  const triggerLoveLetter = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'love-letter-overlay';
+    overlay.innerHTML = `
+      <div class="love-letter-envelope">
+        <div class="love-letter-flap"></div>
+        <div class="love-letter-paper">
+          <p class="love-letter-greeting">Dear Chhavi,</p>
+          <p class="love-letter-body">Every line of code I write is a love letter to you. Every bug I fix, I fix because I want this world to be perfect — just like you are to me.</p>
+          <p class="love-letter-body">You're not just my motivation. You're my reason.</p>
+          <p class="love-letter-sign">Forever yours, ❤️</p>
+        </div>
+      </div>
+    `;
+    overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); }, 12000);
+  };
+
+  // 😘 Click-to-kiss mode: every click leaves a kiss mark for 8s
+  const triggerKissMode = () => {
+    document.body.classList.add('kiss-cursor-mode');
+    const kisses = ['💋', '😘', '💕', '💗'];
+    const handler = (e) => {
+      const k = document.createElement('div');
+      k.className = 'kiss-mark';
+      k.textContent = kisses[Math.floor(Math.random() * kisses.length)];
+      k.style.left = e.pageX + 'px';
+      k.style.top = e.pageY + 'px';
+      k.style.fontSize = (20 + Math.random() * 16) + 'px';
+      document.body.appendChild(k);
+      setTimeout(() => k.remove(), 3000);
+    };
+    window.addEventListener('click', handler);
+    setTimeout(() => { window.removeEventListener('click', handler); document.body.classList.remove('kiss-cursor-mode'); }, 8000);
+  };
+
+  // 🌌 Galaxy swirl with orbiting hearts
+  const triggerGalaxySwirl = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'galaxy-swirl-overlay';
+    // Central glow
+    const center = document.createElement('div');
+    center.className = 'galaxy-center';
+    center.textContent = '💜';
+    overlay.appendChild(center);
+    // Orbiting particles
+    const orbitEmojis = ['💕', '💖', '✨', '🌟', '💗', '⭐', '💫', '💝'];
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'galaxy-orbit-particle';
+      particle.textContent = orbitEmojis[i % orbitEmojis.length];
+      particle.style.setProperty('--orbit-radius', (80 + i * 15) + 'px');
+      particle.style.setProperty('--orbit-speed', (3 + Math.random() * 4) + 's');
+      particle.style.setProperty('--orbit-delay', (Math.random() * 3) + 's');
+      particle.style.setProperty('--start-angle', (i * 18) + 'deg');
+      particle.style.fontSize = (12 + Math.random() * 10) + 'px';
+      overlay.appendChild(particle);
+    }
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 8000);
+  };
+
+  // 🧸 Cute emoji rain
+  const triggerCuteRain = () => {
+    const cuties = ['🧸', '🐱', '🐰', '🌸', '🍰', '🎀', '🦊', '🐣', '☁️', '🍓', '🌈', '🦄'];
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'cute-rain-drop';
+        c.textContent = cuties[Math.floor(Math.random() * cuties.length)];
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.fontSize = (16 + Math.random() * 20) + 'px';
+        c.style.animationDuration = `${2 + Math.random() * 3}s`;
+        c.style.animationDelay = `${Math.random() * 0.3}s`;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 6000);
+      }, i * 100);
+    }
   };
 
 

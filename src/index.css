@@ -2616,3 +2616,286 @@ input, select, textarea {
 .login-mode-hint button:hover {
   color: #ffb5a7;
 }
+
+/* ═══════════════════════════════════════════════════
+   NEW EASTER EGG ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+
+/* 🦋 BUTTERFLIES */
+.easter-butterfly {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  animation: butterflyFloat linear forwards;
+  filter: drop-shadow(0 0 6px rgba(232, 121, 249, 0.5));
+}
+@keyframes butterflyFloat {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  25% { transform: translateY(-20vh) translateX(30px) rotate(15deg); }
+  50% { transform: translateY(-45vh) translateX(-20px) rotate(-10deg); }
+  75% { transform: translateY(-65vh) translateX(40px) rotate(20deg); }
+  90% { opacity: 1; }
+  100% { transform: translateY(-90vh) translateX(-10px) rotate(5deg); opacity: 0; }
+}
+
+/* ✨ SPARKLE TRAIL */
+.sparkle-trail-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 99999;
+  animation: sparkleTrailFade 1.5s ease-out forwards;
+  transform: translate(-50%, -50%);
+}
+@keyframes sparkleTrailFade {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  50% { opacity: 0.8; transform: translate(-50%, -70%) scale(1.3) rotate(180deg); }
+  100% { opacity: 0; transform: translate(-50%, -120%) scale(0.3) rotate(360deg); }
+}
+
+/* 🌹 ROSE PETALS */
+.rose-petal-fall {
+  position: fixed;
+  top: -50px;
+  pointer-events: none;
+  z-index: 99999;
+  animation: rosePetalDrift linear forwards;
+}
+@keyframes rosePetalDrift {
+  0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  25% { transform: translateY(25vh) rotate(90deg) translateX(30px); }
+  50% { transform: translateY(50vh) rotate(180deg) translateX(-20px); }
+  75% { transform: translateY(75vh) rotate(270deg) translateX(15px); }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(105vh) rotate(360deg) translateX(-10px); opacity: 0; }
+}
+
+/* 💫 CONSTELLATION */
+.constellation-overlay {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(10,5,30,0.97) 0%, rgba(0,0,0,0.99) 100%);
+  z-index: 999999;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  animation: constellationFadeIn 1.5s ease-out;
+  transition: opacity 1.5s;
+}
+.constellation-overlay.fade-out { opacity: 0; }
+.constellation-bg-star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: starTwinkle 2s ease-in-out infinite alternate;
+}
+@keyframes starTwinkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+.constellation-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(48px, 10vw, 100px);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  background: linear-gradient(135deg, #fcd34d, #f9a8d4, #a78bfa, #67e8f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 30px rgba(252, 211, 77, 0.4));
+  animation: constellationNameGlow 3s ease-in-out infinite alternate;
+}
+@keyframes constellationNameGlow {
+  0% { filter: drop-shadow(0 0 20px rgba(252, 211, 77, 0.3)); }
+  100% { filter: drop-shadow(0 0 50px rgba(167, 139, 250, 0.6)); }
+}
+.constellation-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: rgba(252, 211, 77, 0.6);
+  margin-top: 20px;
+  letter-spacing: 0.15em;
+  font-style: italic;
+  animation: constellationFadeIn 2s ease-out 1s both;
+}
+@keyframes constellationFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 💕 HEART FORMATION */
+.heart-formation-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 999999;
+  transition: opacity 1.5s;
+}
+.heart-formation-overlay.fade-out { opacity: 0; }
+.formation-mini-heart {
+  position: absolute;
+  pointer-events: none;
+  animation: heartPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+@keyframes heartPopIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-30deg); }
+  60% { transform: translate(-50%, -50%) scale(1.3) rotate(10deg); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
+.heart-formation-msg {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #fda4af;
+  text-align: center;
+  animation: heartMsgFadeIn 1s ease-out forwards;
+  text-shadow: 0 0 20px rgba(253, 164, 175, 0.5);
+  white-space: nowrap;
+}
+@keyframes heartMsgFadeIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* 💌 LOVE LETTER */
+.love-letter-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
+  animation: constellationFadeIn 0.8s ease-out;
+  cursor: pointer;
+  transition: opacity 0.8s;
+}
+.love-letter-overlay.fade-out { opacity: 0; }
+.love-letter-envelope {
+  width: min(420px, 90vw);
+  background: linear-gradient(180deg, #fef3c7, #fde68a);
+  border-radius: 12px;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(251, 191, 36, 0.2);
+  animation: letterBounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+@keyframes letterBounceIn {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.love-letter-flap {
+  width: 100%; height: 40px;
+  background: linear-gradient(180deg, #f59e0b, #fbbf24);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  position: absolute; top: 0; left: 0;
+}
+.love-letter-paper {
+  padding: 60px 32px 32px;
+  font-family: 'Playfair Display', serif;
+}
+.love-letter-greeting {
+  font-size: 22px; font-weight: 700;
+  color: #92400e;
+  margin-bottom: 16px;
+  animation: constellationFadeIn 0.8s ease-out 0.5s both;
+}
+.love-letter-body {
+  font-size: 15px; line-height: 1.8;
+  color: #78350f;
+  margin-bottom: 12px;
+  animation: constellationFadeIn 0.8s ease-out 1s both;
+}
+.love-letter-body:nth-child(3) { animation-delay: 1.5s; }
+.love-letter-sign {
+  font-size: 18px; font-weight: 700;
+  color: #dc2626;
+  margin-top: 20px;
+  text-align: right;
+  font-style: italic;
+  animation: constellationFadeIn 0.8s ease-out 2s both;
+}
+
+/* 😘 KISS MODE */
+.kiss-cursor-mode { cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>💋</text></svg>") 16 16, pointer !important; }
+.kiss-cursor-mode * { cursor: inherit !important; }
+.kiss-mark {
+  position: absolute;
+  pointer-events: none;
+  z-index: 99999;
+  animation: kissPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, kissFadeOut 0.5s ease-in 2.5s forwards;
+  transform: translate(-50%, -50%);
+}
+@keyframes kissPopIn {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes kissFadeOut {
+  to { opacity: 0; transform: translate(-50%, -80%) scale(0.5); }
+}
+
+/* 🌌 GALAXY SWIRL */
+.galaxy-swirl-overlay {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(88, 28, 135, 0.95), rgba(0,0,0,0.98));
+  z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
+  animation: constellationFadeIn 1s ease-out;
+  transition: opacity 1.5s;
+}
+.galaxy-swirl-overlay.fade-out { opacity: 0; }
+.galaxy-center {
+  font-size: 64px;
+  animation: galaxyCenterPulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.8));
+}
+@keyframes galaxyCenterPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+.galaxy-orbit-particle {
+  position: absolute;
+  top: 50%; left: 50%;
+  animation: galaxyOrbit var(--orbit-speed) linear infinite;
+  animation-delay: var(--orbit-delay);
+  transform-origin: 0 0;
+}
+@keyframes galaxyOrbit {
+  from { transform: rotate(var(--start-angle)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--start-angle))); }
+  to { transform: rotate(calc(var(--start-angle) + 360deg)) translateX(var(--orbit-radius)) rotate(calc(-1 * var(--start-angle) - 360deg)); }
+}
+
+/* 🌈 RAINBOW WAVE */
+.rainbow-wave-effect::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: linear-gradient(90deg,
+    rgba(239,68,68,0.15), rgba(249,115,22,0.15), rgba(234,179,8,0.15),
+    rgba(34,197,94,0.15), rgba(59,130,246,0.15), rgba(139,92,246,0.15), rgba(236,72,153,0.15));
+  background-size: 300% 100%;
+  z-index: 99998;
+  pointer-events: none;
+  animation: rainbowSweep 3s ease-in-out infinite;
+}
+@keyframes rainbowSweep {
+  0% { background-position: 0% 50%; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { background-position: 300% 50%; opacity: 0; }
+}
+
+/* 🧸 CUTE RAIN */
+.cute-rain-drop {
+  position: fixed;
+  top: -60px;
+  pointer-events: none;
+  z-index: 99999;
+  animation: cuteRainFall linear forwards;
+}
+@keyframes cuteRainFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translateY(50vh) rotate(180deg); }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
