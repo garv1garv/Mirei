@@ -821,8 +821,7 @@ export default function App() {
               onChange={e => setApiKeyInput(e.target.value)}
             />
             <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
-              // Note: the original had saveApiKey here, and setApiKey later.
-              setApiKey(apiKeyInput);
+              saveApiKey(apiKeyInput);
               alert('API Key Saved (local storage)');
             }}>Save Configuration</button>
           </div>
