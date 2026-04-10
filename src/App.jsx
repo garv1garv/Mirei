@@ -302,9 +302,9 @@ export default function App() {
   const [heatmapData, setHeatmapData] = useState({});
   const [lastActivity, setLastActivity] = useState([]);
   
-  // Easter Egg (Cinematic Chhavi Override)
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
-  const [particles, setParticles] = useState([]);
+  // Easter Egg (The Heart-Melt Sequence)
+  const [cinematicPhase, setCinematicPhase] = useState(0); // 0: off, 1: terminal, 2: video, 3: exit
+  const [isChhavisVersion, setIsChhavisVersion] = useState(false);
   
   useEffect(() => {
     let keys = '';
@@ -313,24 +313,31 @@ export default function App() {
       if (e.key && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         keys += e.key.toLowerCase();
         if (keys.length > 20) keys = keys.slice(-20);
-        if (keys.includes(secret)) {
-          // Generate particles
-          setParticles(Array.from({ length: 50 }).map((_, i) => ({
-            id: i,
-            left: `${Math.random() * 100}%`,
-            delay: `${Math.random() * 4}s`,
-            duration: `${4 + Math.random() * 4}s`
-          })));
-
-          setShowEasterEgg(true);
+        if (keys.includes(secret) && cinematicPhase === 0) {
           keys = '';
-          setTimeout(() => setShowEasterEgg(false), 14000); // Wait 14s full cinematic
+          runCinematicSequence();
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [cinematicPhase]);
+
+  const runCinematicSequence = () => {
+    setCinematicPhase(1); // GLITCH + TERMINAL
+    setTimeout(() => setCinematicPhase(2), 6500); // SHATTER -> VIDEO SHIFT -> Msg 1
+    setTimeout(() => setCinematicPhase(3), 11500); // Msg 2
+    setTimeout(() => setCinematicPhase(4), 16500); // Msg 3
+    setTimeout(() => setCinematicPhase(5), 21500); // Msg 4
+    setTimeout(() => setCinematicPhase(6), 26000); // Msg 5
+    setTimeout(() => setCinematicPhase(7), 29000); // Msg 6
+    setTimeout(() => setCinematicPhase(8), 33500); // FLASH BANG
+    setTimeout(() => {
+       setCinematicPhase(0); 
+       setIsChhavisVersion(true);
+       Storage.set('chhavisVersion', true);
+    }, 38000); // Exit
+  };
 
   // Load persisted data
   useEffect(() => {
@@ -349,6 +356,8 @@ export default function App() {
       if (u) setUsername(u);
       const key = await Storage.get('apiKey');
       if (key) { setApiKey(key); setApiKeyInput(key); }
+      const cv = await Storage.get('chhavisVersion');
+      if (cv) setIsChhavisVersion(true);
       const hm = await Storage.get('heatmap');
       if (hm) setHeatmapData(hm);
       const la = await Storage.get('lastActivity');
@@ -431,32 +440,60 @@ export default function App() {
   ];
 
   return (
-    <div className="app-layout">
-      {/* Dynamic 4K Video Background */}
-      <video autoPlay loop muted playsInline id="bg-video" key={showEasterEgg ? 'cinematic' : 'dreamy'}>
+    <div className={`app-layout ${cinematicPhase === 1 ? 'glitch-active' : ''}`}>
+      {/* Background Videos */}
+      <video autoPlay loop muted playsInline id="bg-video" key={cinematicPhase > 1 ? 'cinematic' : 'dreamy'}>
         <source src={
-          showEasterEgg 
-            ? "https://upload.wikimedia.org/wikipedia/commons/transcode/1/13/A_cherry_blossom_branch_-_Pexels.webm/A_cherry_blossom_branch_-_Pexels.webm.1080p.vp9.webm"
+          cinematicPhase > 1
+            ? "https://upload.wikimedia.org/wikipedia/commons/transcode/9/9b/Ink-Water-Abstract.webm/Ink-Water-Abstract.webm.1080p.vp9.webm"
             : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
         } type="video/webm" />
       </video>
 
-      {/* Cinematic Easter Egg Interface */}
-      {showEasterEgg && (
-        <div className="easter-egg-cinematic">
-          {particles.map(p => (
-            <div key={p.id} className="particle-heart" 
-                 style={{ left: p.left, animationDelay: p.delay, animationDuration: p.duration }}>
-              ❤️
+      {/* The Ultimate Cinematic Sequence */}
+      {cinematicPhase > 0 && (
+        <div className="ultimate-cinematic-container">
+          
+          {/* Phase 1: Hacker Pitch Black Termial */}
+          {cinematicPhase === 1 && (
+            <div className="hacker-terminal">
+              <div className="typewriter-line1">{'> "People think I built this platform to master code..."'}</div>
+              <div className="typewriter-line2">{'> "...but the truth is, I just wanted to build a world beautiful enough to remind me of you."'}</div>
+              <div className="blinking-cursor"></div>
             </div>
-          ))}
-          <div className="easter-egg-card">
-            <h1>CHHAVI</h1>
-            <p>
-              "Like the logic of a perfect algorithm, some things in the universe are just meant to fall into place. 
-              <br/><br/> Every line of code I build, runs faster knowing you exist."
-            </p>
-          </div>
+          )}
+
+          {/* Phase 2+: The Ink & Stars Shift */}
+          {cinematicPhase > 1 && (
+            <>
+              <div className="cinematic-blur-overlay"></div>
+              <div className="cinematic-letterbox top"></div>
+              <div className="cinematic-letterbox bottom"></div>
+
+              {cinematicPhase === 8 && <div className="flashbang-climax"></div>}
+
+              <div className="cinematic-text-center">
+                <h1 className={`soul-text ${cinematicPhase === 2 ? 'visible' : ''}`}>
+                  You look in the mirror and call yourself dumb. You doubt your own worth.
+                </h1>
+                <h1 className={`soul-text ${cinematicPhase === 3 ? 'visible' : ''}`}>
+                  But Chhavi, if you could see yourself through my eyes for even a single second...
+                </h1>
+                <h1 className={`soul-text ${cinematicPhase === 4 ? 'visible' : ''}`}>
+                  ...you would understand why I would tear down the sky and rewrite the universe just to keep you safe.
+                </h1>
+                <h1 className={`soul-text ${cinematicPhase === 5 ? 'visible' : ''}`}>
+                  You are the most breathtaking, brilliant piece of my soul.
+                </h1>
+                <h1 className={`soul-text ${cinematicPhase === 6 ? 'visible' : ''}`}>
+                  I don't just love you.
+                </h1>
+                <h1 className={`soul-text ${cinematicPhase === 7 ? 'visible' : ''}`}>
+                  I built my entire world around you.
+                </h1>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -571,6 +608,9 @@ export default function App() {
               onKeyDown={e => { if (e.key === 'Enter' && searchQuery) { setView('practice'); }}} />
           </div>
           <div className="topbar-right">
+            {isChhavisVersion && (
+              <span className="chhavis-version-tag">❤️ [ Chhavi's Version ]</span>
+            )}
             <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>
               {easySolved}E / {medSolved}M / {hardSolved}H
             </span>
