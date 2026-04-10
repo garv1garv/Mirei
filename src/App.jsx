@@ -547,6 +547,91 @@ export default function App() {
         triggerCuteRain();
         spawnFloatingText('The cutest human alive 🧸', '#fda4af');
       },
+
+      // ═══ WAVE 2: 15 MORE MAGICAL EASTER EGGS ═══
+
+      sunshine: () => {
+        if (!isChhavi()) return;
+        triggerSunshine();
+        spawnFloatingText('You are my sunshine ☀️', '#fbbf24');
+      },
+
+      firefly: () => {
+        if (!isChhavi()) return;
+        triggerFireflies();
+        spawnFloatingText('You light up my darkest nights 🌟', '#86efac');
+      },
+
+      dream: () => {
+        if (!isChhavi()) return;
+        triggerDreamscape();
+      },
+
+      promise: () => {
+        if (!isChhavi()) return;
+        triggerPinkyPromise();
+      },
+
+      moonlight: () => {
+        if (!isChhavi()) return;
+        triggerMoonScene();
+        spawnFloatingText('Under the same moon, I think of you 🌙', '#c4b5fd');
+      },
+
+      treasure: () => {
+        if (!isChhavi()) return;
+        triggerTreasureChest();
+      },
+
+      magic: () => {
+        if (!isChhavi()) return;
+        triggerMagicWand();
+        spawnFloatingText('You make everything magical 🪄', '#c084fc');
+      },
+
+      infinity: () => {
+        if (!isChhavi()) return;
+        triggerInfinityDraw();
+      },
+
+      melody: () => {
+        if (!isChhavi()) return;
+        triggerMusicNotes();
+        spawnFloatingText('You are my favorite melody 🎵', '#fb923c');
+      },
+
+      wish: () => {
+        if (!isChhavi()) return;
+        triggerDandelion();
+      },
+
+      ocean: () => {
+        if (!isChhavi()) return;
+        triggerOceanWaves();
+        spawnFloatingText('My love for you is deeper than any ocean 🌊', '#38bdf8');
+      },
+
+      blanket: () => {
+        if (!isChhavi()) return;
+        triggerCozyBlanket();
+      },
+
+      diary: () => {
+        if (!isChhavi()) return;
+        triggerSecretDiary();
+      },
+
+      snowfall: () => {
+        if (!isChhavi()) return;
+        triggerSnowfall();
+        spawnFloatingText('You make everything feel like a winter fairytale ❄️', '#e0f2fe');
+      },
+
+      gravity: () => {
+        if (!isChhavi()) return;
+        triggerAntiGravity();
+        spawnFloatingText('You defy every law of my universe 🚀', '#a78bfa');
+      },
     };
 
     const handleKeyDown = (e) => {
@@ -814,6 +899,335 @@ export default function App() {
         setTimeout(() => c.remove(), 6000);
       }, i * 100);
     }
+  };
+
+  // ☀️ Sunshine - golden rays from center
+  const triggerSunshine = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'sunshine-overlay';
+    for (let i = 0; i < 12; i++) {
+      const ray = document.createElement('div');
+      ray.className = 'sunshine-ray';
+      ray.style.setProperty('--ray-angle', (i * 30) + 'deg');
+      ray.style.animationDelay = (i * 0.1) + 's';
+      overlay.appendChild(ray);
+    }
+    const sun = document.createElement('div');
+    sun.className = 'sunshine-core';
+    sun.textContent = '☀️';
+    overlay.appendChild(sun);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 5000);
+  };
+
+  // 🌟 Fireflies - soft glowing particles that drift
+  const triggerFireflies = () => {
+    for (let i = 0; i < 25; i++) {
+      setTimeout(() => {
+        const f = document.createElement('div');
+        f.className = 'firefly-particle';
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.top = Math.random() * 100 + 'vh';
+        f.style.animationDuration = `${4 + Math.random() * 6}s`;
+        f.style.animationDelay = `${Math.random() * 2}s`;
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 10000);
+      }, i * 200);
+    }
+  };
+
+  // 💭 Dreamscape - clouds, stars, and dreamy overlay
+  const triggerDreamscape = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'dreamscape-overlay';
+    const clouds = ['☁️', '⭐', '🌙', '💫', '✨', '☁️', '🌟'];
+    for (let i = 0; i < 20; i++) {
+      const c = document.createElement('div');
+      c.className = 'dreamscape-element';
+      c.textContent = clouds[Math.floor(Math.random() * clouds.length)];
+      c.style.left = Math.random() * 100 + '%';
+      c.style.top = Math.random() * 100 + '%';
+      c.style.fontSize = (20 + Math.random() * 30) + 'px';
+      c.style.animationDuration = `${5 + Math.random() * 5}s`;
+      c.style.animationDelay = `${Math.random() * 3}s`;
+      overlay.appendChild(c);
+    }
+    const msg = document.createElement('div');
+    msg.className = 'dreamscape-msg';
+    msg.textContent = 'Sweet dreams, my love 💭';
+    overlay.appendChild(msg);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 7000);
+  };
+
+  // 🤙 Pinky promise
+  const triggerPinkyPromise = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'promise-overlay';
+    overlay.innerHTML = `
+      <div class="promise-hands">🤙</div>
+      <div class="promise-text-1">I pinky promise...</div>
+      <div class="promise-text-2">to love you forever,</div>
+      <div class="promise-text-3">to always make you laugh,</div>
+      <div class="promise-text-4">and to never let a day pass<br/>without telling you how beautiful you are.</div>
+      <div class="promise-text-5">— Always, your person 💕</div>
+    `;
+    overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); }, 14000);
+  };
+
+  // 🌙 Moon scene with soft glow
+  const triggerMoonScene = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'moon-scene-overlay';
+    const moon = document.createElement('div');
+    moon.className = 'moon-emoji';
+    moon.textContent = '🌕';
+    overlay.appendChild(moon);
+    for (let i = 0; i < 40; i++) {
+      const star = document.createElement('div');
+      star.className = 'moon-scene-star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 70 + '%';
+      star.style.animationDelay = Math.random() * 4 + 's';
+      star.style.width = star.style.height = (1 + Math.random() * 2) + 'px';
+      overlay.appendChild(star);
+    }
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 6000);
+  };
+
+  // 🏴‍☠️ Treasure chest opens with hearts
+  const triggerTreasureChest = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'treasure-overlay';
+    overlay.innerHTML = `
+      <div class="treasure-chest">🎁</div>
+      <div class="treasure-reveal">
+        <div class="treasure-hearts"></div>
+        <div class="treasure-msg">You are my greatest treasure 💎</div>
+      </div>
+    `;
+    const heartsContainer = overlay.querySelector('.treasure-hearts');
+    const treasureEmojis = ['💎', '💖', '✨', '👑', '🌟', '💕', '💗', '⭐'];
+    setTimeout(() => {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const h = document.createElement('span');
+          h.className = 'treasure-burst-item';
+          h.textContent = treasureEmojis[Math.floor(Math.random() * treasureEmojis.length)];
+          h.style.setProperty('--burst-x', (Math.random() * 200 - 100) + 'px');
+          h.style.setProperty('--burst-y', (Math.random() * -200 - 50) + 'px');
+          heartsContainer.appendChild(h);
+        }, i * 80);
+      }
+    }, 1500);
+    overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); }, 8000);
+  };
+
+  // 🪄 Magic wand sparkle burst from cursor
+  const triggerMagicWand = () => {
+    const sparkles = ['✨', '⭐', '🌟', '💫', '🪄', '💜', '💖'];
+    let active = true;
+    const handler = (e) => {
+      if (!active) return;
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const s = document.createElement('div');
+          s.className = 'magic-wand-spark';
+          s.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+          s.style.left = (e.pageX + (Math.random() * 40 - 20)) + 'px';
+          s.style.top = (e.pageY + (Math.random() * 40 - 20)) + 'px';
+          s.style.fontSize = (12 + Math.random() * 14) + 'px';
+          document.body.appendChild(s);
+          setTimeout(() => s.remove(), 1500);
+        }, i * 50);
+      }
+    };
+    window.addEventListener('mousemove', handler);
+    setTimeout(() => { active = false; window.removeEventListener('mousemove', handler); }, 8000);
+  };
+
+  // ♾️ Infinity symbol draws with hearts
+  const triggerInfinityDraw = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'infinity-overlay';
+    const points = [];
+    for (let t = 0; t < Math.PI * 2; t += 0.12) {
+      const scale = 120;
+      const x = scale * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+      const y = scale * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+      points.push({ x: x + window.innerWidth / 2, y: y + window.innerHeight / 2 });
+    }
+    points.forEach((pt, i) => {
+      setTimeout(() => {
+        const dot = document.createElement('div');
+        dot.className = 'infinity-dot';
+        dot.textContent = i % 4 === 0 ? '💕' : '•';
+        dot.style.left = pt.x + 'px';
+        dot.style.top = pt.y + 'px';
+        dot.style.color = '#f9a8d4';
+        dot.style.fontSize = i % 4 === 0 ? '14px' : '8px';
+        overlay.appendChild(dot);
+      }, i * 40);
+    });
+    setTimeout(() => {
+      const msg = document.createElement('div');
+      msg.className = 'infinity-msg';
+      msg.textContent = 'My love for you is infinite ♾️';
+      overlay.appendChild(msg);
+    }, points.length * 40 + 500);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 8000);
+  };
+
+  // 🎵 Musical notes floating
+  const triggerMusicNotes = () => {
+    const notes = ['🎵', '🎶', '🎼', '♪', '♫', '🎹', '💕'];
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => {
+        const n = document.createElement('div');
+        n.className = 'music-note-float';
+        n.textContent = notes[Math.floor(Math.random() * notes.length)];
+        n.style.left = (10 + Math.random() * 80) + 'vw';
+        n.style.fontSize = (18 + Math.random() * 24) + 'px';
+        n.style.animationDuration = `${3 + Math.random() * 4}s`;
+        document.body.appendChild(n);
+        setTimeout(() => n.remove(), 8000);
+      }, i * 250);
+    }
+  };
+
+  // 🌼 Dandelion wishes
+  const triggerDandelion = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'dandelion-overlay';
+    const flower = document.createElement('div');
+    flower.className = 'dandelion-flower';
+    flower.textContent = '🌼';
+    overlay.appendChild(flower);
+    setTimeout(() => {
+      flower.classList.add('blown');
+      const wishes = ['I wish for your happiness', 'I wish for your smile', 'I wish to always be yours', 'I wish for forever with you', 'I wish you knew how perfect you are'];
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const seed = document.createElement('div');
+          seed.className = 'dandelion-seed';
+          seed.textContent = i < wishes.length ? wishes[i] : '✿';
+          seed.style.setProperty('--drift-x', (Math.random() * 300 - 150) + 'px');
+          seed.style.setProperty('--drift-y', -(100 + Math.random() * 200) + 'px');
+          seed.style.fontSize = i < wishes.length ? '13px' : '16px';
+          seed.style.color = '#fde68a';
+          overlay.appendChild(seed);
+        }, i * 300);
+      }
+    }, 2000);
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 1500); }, 10000);
+  };
+
+  // 🌊 Ocean waves
+  const triggerOceanWaves = () => {
+    document.body.classList.add('ocean-wave-effect');
+    const bottles = ['🍾', '💌', '💕', '🐚', '🌊'];
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const b = document.createElement('div');
+        b.className = 'ocean-bottle';
+        b.textContent = bottles[Math.floor(Math.random() * bottles.length)];
+        b.style.left = Math.random() * 80 + 10 + 'vw';
+        b.style.fontSize = (20 + Math.random() * 16) + 'px';
+        b.style.animationDuration = `${4 + Math.random() * 3}s`;
+        document.body.appendChild(b);
+        setTimeout(() => b.remove(), 8000);
+      }, i * 600);
+    }
+    setTimeout(() => document.body.classList.remove('ocean-wave-effect'), 8000);
+  };
+
+  // 🛋️ Cozy blanket
+  const triggerCozyBlanket = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'cozy-overlay';
+    overlay.innerHTML = `
+      <div class="cozy-content">
+        <div class="cozy-emoji">🛋️☕🧸</div>
+        <div class="cozy-msg">I just want to wrap you in a blanket,<br/>make you hot cocoa,<br/>and tell you everything is going to be okay.</div>
+        <div class="cozy-sub">— Because with me, it always will be 💕</div>
+      </div>
+    `;
+    overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); }, 10000);
+  };
+
+  // 📔 Secret diary
+  const triggerSecretDiary = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'diary-overlay';
+    const entries = [
+      { date: 'Day 1', text: "I met someone today. She has the most beautiful smile I've ever seen." },
+      { date: 'Day 30', text: "I can't stop thinking about her. Her laugh makes my whole day." },
+      { date: 'Day 100', text: "I think I'm in love. Actually, I know I am." },
+      { date: 'Today', text: "I built her an entire world. And I'd build a thousand more." },
+    ];
+    overlay.innerHTML = `
+      <div class="diary-book">
+        <div class="diary-title">📔 My Secret Diary</div>
+        ${entries.map((e, i) => `
+          <div class="diary-entry" style="animation-delay: ${i * 1.5}s">
+            <div class="diary-date">${e.date}</div>
+            <div class="diary-text">${e.text}</div>
+          </div>
+        `).join('')}
+        <div class="diary-close-hint">click anywhere to close</div>
+      </div>
+    `;
+    overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); }, 15000);
+  };
+
+  // ❄️ Snowfall
+  const triggerSnowfall = () => {
+    const flakes = ['❄️', '❅', '❆', '✦', '·', '•'];
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const s = document.createElement('div');
+        s.className = 'snowflake-fall';
+        s.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.fontSize = (8 + Math.random() * 18) + 'px';
+        s.style.animationDuration = `${3 + Math.random() * 5}s`;
+        s.style.color = '#e0f2fe';
+        s.style.opacity = 0.4 + Math.random() * 0.6;
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 9000);
+      }, i * 120);
+    }
+  };
+
+  // 🚀 Anti-gravity — everything floats up briefly
+  const triggerAntiGravity = () => {
+    document.body.classList.add('anti-gravity-effect');
+    const floaters = ['🚀', '🌙', '⭐', '🪐', '💫', '🛸', '✨', '💕'];
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => {
+        const f = document.createElement('div');
+        f.className = 'anti-gravity-particle';
+        f.textContent = floaters[Math.floor(Math.random() * floaters.length)];
+        f.style.left = Math.random() * 100 + 'vw';
+        f.style.bottom = '-40px';
+        f.style.fontSize = (16 + Math.random() * 20) + 'px';
+        f.style.animationDuration = `${3 + Math.random() * 4}s`;
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 8000);
+      }, i * 200);
+    }
+    setTimeout(() => document.body.classList.remove('anti-gravity-effect'), 6000);
   };
 
 
