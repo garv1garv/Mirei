@@ -1,25 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  --bg: #0b0d10;
-  --bg2: #12151a;
-  --bg3: #1a1e26;
-  --accent: #6c8cff;
-  --accent2: #8ba4ff;
-  --green: #4ade80;
-  --yellow: #fbbf24;
-  --red: #f87171;
-  --text: #e2e8f0;
-  --text2: #7a8ba6;
-  --border: #262d3a;
-  --code-bg: #090b0e;
+  /* LeetCode Dark Theme Variables */
+  --bg: rgba(26, 26, 26, 0.75);         /* Transparent LeetCode Dark Background */
+  --bg2: rgba(40, 40, 40, 0.65);        /* Glassmorphic Secondary */
+  --bg3: rgba(51, 51, 51, 0.75);        /* Inner Panel Background */
+  --accent: #ffa116;                    /* LeetCode Orange */
+  --accent2: #ffb240;
+  --green: #00b8a3;                     /* LeetCode Accepted Green */
+  --yellow: #ffc01e;
+  --red: #ff375f;                       /* LeetCode Wrong/Hard Red */
+  --text: #eff2f6;                      /* Crisp White/Gray */
+  --text2: #8a8a8a;                     /* Secondary Text */
+  --border: rgba(62, 62, 62, 0.6);      /* Subtle Border */
+  --code-bg: rgba(41, 41, 41, 0.85);
+  
   --sidebar-width: 250px;
   --topbar-height: 56px;
   --radius: 8px;
   --radius-lg: 12px;
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-  --shadow-hover: 0 4px 20px rgba(108, 140, 255, 0.12);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 8px 24px rgba(255, 161, 22, 0.15); /* Orange Glow */
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-blur: blur(20px);             /* Central variable for Glassmorphism */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,6 +49,7 @@ body {
 .sidebar {
   position: fixed; left: 0; top: 0; bottom: 0;
   width: var(--sidebar-width); background: var(--bg2);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
   z-index: 100;
@@ -107,13 +111,14 @@ body {
 }
 .sidebar-settings:hover { color: var(--text); }
 
-/* ═══ TOP BAR ═══ */
+/* ═══ TOPBAR ═══ */
 .topbar {
   height: var(--topbar-height);
   background: var(--bg2);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 24px; gap: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; position: sticky; top: 0; z-index: 90;
 }
 .topbar-breadcrumb { font-size: 14px; color: var(--text2); }
 .topbar-breadcrumb span { color: var(--text); font-weight: 500; }
@@ -1651,4 +1656,57 @@ input, select, textarea {
   .tutor-msg-content { max-width: 92%; }
   .tutor-input-wrapper { padding: 8px 10px 12px; }
   .tutor-prompt-box { padding: 8px 10px; border-radius: 20px; }
+}
+
+/* ═══════════════════════════════════════ */
+/* 4K Tech/Scenery Background Video        */
+/* ═══════════════════════════════════════ */
+#bg-video {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -10;
+  transform: translateX(-50%) translateY(-50%);
+  object-fit: cover;
+  filter: brightness(0.55) contrast(1.1) saturate(1.2);
+  opacity: 0.9;
+}
+
+/* ═══════════════════════════════════════ */
+/* Easter Egg Animation (Chhavi LOML)      */
+/* ═══════════════════════════════════════ */
+.easter-egg-heart {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 80px;
+  font-weight: bold;
+  color: #ff375f;
+  z-index: 99999;
+  text-shadow: 0 0 40px rgba(255, 55, 95, 0.8), 0 0 80px rgba(255, 55, 95, 0.5);
+  pointer-events: none;
+  animation: heartPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+.easter-egg-heart span {
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+@keyframes heartPop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  10% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  25% { transform: translate(-50%, -50%) scale(0.9); opacity: 1; }
+  40% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  75% { transform: translate(-50%, -50%) scale(1); opacity: 1; margin-top: 0; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; margin-top: -150px; }
 }

@@ -283,6 +283,26 @@ export default function App() {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [heatmapData, setHeatmapData] = useState({});
   const [lastActivity, setLastActivity] = useState([]);
+  
+  // Easter Egg (chhavi)
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  useEffect(() => {
+    let keys = '';
+    const secret = 'chhavi';
+    const handleKeyDown = (e) => {
+      if (e.key && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        keys += e.key.toLowerCase();
+        if (keys.length > 20) keys = keys.slice(-20);
+        if (keys.includes(secret)) {
+          setShowEasterEgg(true);
+          keys = '';
+          setTimeout(() => setShowEasterEgg(false), 3500); // Hide after animation
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Load persisted data
   useEffect(() => {
@@ -384,6 +404,19 @@ export default function App() {
 
   return (
     <div className="app-layout">
+      {/* 4K Video Background */}
+      <video autoPlay loop muted playsInline id="bg-video">
+        <source src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Time_Lapse_of_the_Milky_Way.webm" type="video/webm" />
+        {/* Fallback to image if video fails to load to prevent breaking layout */}
+      </video>
+
+      {/* Easter Egg Overlay */}
+      {showEasterEgg && (
+        <div className="easter-egg-heart">
+          ❤️ <span>Chhavi</span> ❤️
+        </div>
+      )}
+
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-logo">
