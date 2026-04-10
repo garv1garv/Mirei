@@ -8,7 +8,25 @@ import { runCode, loadPyodideRuntime, LANGUAGES } from './utils/codeRunner'
 
 // ═══ ICONS (inline SVGs) ═══
 const Icons = {
-  logo: <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="url(#lg)"/><path d="M8 16h4l2-4 4 8 2-4h4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><defs><linearGradient id="lg" x1="0" y1="0" x2="32" y2="32"><stop stopColor="#6c8cff"/><stop offset="1" stopColor="#4c6ef5"/></linearGradient></defs></svg>,
+  logo: (
+    <svg viewBox="0 0 100 100" fill="none" className="app-logo">
+      <defs>
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ffa116" />
+          <stop offset="100%" stopColor="#ff375f" />
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <path d="M20 80 V20 L50 60 L80 20 V80" stroke="url(#logoGrad)" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)"/>
+      <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" strokeWidth="4" opacity="0.3" filter="url(#glow)"/>
+    </svg>
+  ),
   grid: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
   book: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>,
   code: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
@@ -284,8 +302,10 @@ export default function App() {
   const [heatmapData, setHeatmapData] = useState({});
   const [lastActivity, setLastActivity] = useState([]);
   
-  // Easter Egg (chhavi)
+  // Easter Egg (Cinematic Chhavi Override)
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [particles, setParticles] = useState([]);
+  
   useEffect(() => {
     let keys = '';
     const secret = 'chhavi';
@@ -294,9 +314,17 @@ export default function App() {
         keys += e.key.toLowerCase();
         if (keys.length > 20) keys = keys.slice(-20);
         if (keys.includes(secret)) {
+          // Generate particles
+          setParticles(Array.from({ length: 50 }).map((_, i) => ({
+            id: i,
+            left: `${Math.random() * 100}%`,
+            delay: `${Math.random() * 4}s`,
+            duration: `${4 + Math.random() * 4}s`
+          })));
+
           setShowEasterEgg(true);
           keys = '';
-          setTimeout(() => setShowEasterEgg(false), 3500); // Hide after animation
+          setTimeout(() => setShowEasterEgg(false), 14000); // Wait 14s full cinematic
         }
       }
     };
@@ -404,18 +432,62 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      {/* 4K Video Background */}
-      <video autoPlay loop muted playsInline id="bg-video">
-        <source src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Time_Lapse_of_the_Milky_Way.webm" type="video/webm" />
-        {/* Fallback to image if video fails to load to prevent breaking layout */}
+      {/* Dynamic 4K Video Background */}
+      <video autoPlay loop muted playsInline id="bg-video" key={showEasterEgg ? 'cinematic' : 'earthy'}>
+        <source src={
+          showEasterEgg 
+            ? "https://upload.wikimedia.org/wikipedia/commons/transcode/1/13/A_cherry_blossom_branch_-_Pexels.webm/A_cherry_blossom_branch_-_Pexels.webm.1080p.vp9.webm"
+            : "https://upload.wikimedia.org/wikipedia/commons/transcode/0/05/Pexels_Videos_1093662.webm/Pexels_Videos_1093662.webm.1080p.vp9.webm"
+        } type="video/webm" />
       </video>
 
-      {/* Easter Egg Overlay */}
+      {/* Cinematic Easter Egg Interface */}
       {showEasterEgg && (
-        <div className="easter-egg-heart">
-          ❤️ <span>Chhavi</span> ❤️
+        <div className="easter-egg-cinematic">
+          {particles.map(p => (
+            <div key={p.id} className="particle-heart" 
+                 style={{ left: p.left, animationDelay: p.delay, animationDuration: p.duration }}>
+              ❤️
+            </div>
+          ))}
+          <div className="easter-egg-card">
+            <h1>CHHAVI</h1>
+            <p>
+              "Like the logic of a perfect algorithm, some things in the universe are just meant to fall into place. 
+              <br/><br/> Every line of code I build, runs faster knowing you exist."
+            </p>
+          </div>
         </div>
       )}
+
+      {/* Settings Drawer */}
+      <div className={`settings-overlay ${showSettings ? 'open' : ''}`} onClick={() => setShowSettings(false)} />
+      <div className={`settings-drawer ${showSettings ? 'open' : ''}`}>
+        <div className="settings-drawer-header">
+          <h2>Application Settings</h2>
+          <button onClick={() => setShowSettings(false)}>{Icons.close}</button>
+        </div>
+        <div className="settings-panel space-y-4">
+          <label>Google Gemini API Key</label>
+          <input 
+            className="input" 
+            type="password" 
+            placeholder="AI Studio API Key..."
+            value={apiKeyInput}
+            onChange={e => setApiKeyInput(e.target.value)}
+          />
+          <button className="btn btn-primary w-full justify-center" onClick={() => {
+            setApiKey(apiKeyInput);
+            alert('API Key Saved (local storage)');
+            setShowSettings(false);
+          }}>Save Configuration</button>
+          <p className="text-sm" style={{color: 'var(--text2)', marginTop: '20px', lineHeight: 1.5}}>
+            Using the LeetCode Dark Interface. <br/>
+            Running Pyodide WASM Runtime. <br/>
+            Build: MIREI Alpha-2.4
+          </p>
+        </div>
+      </div>
 
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
