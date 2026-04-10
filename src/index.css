@@ -1729,22 +1729,54 @@ input, select, textarea {
 /* ═══════════════════════════════════════ */
 /* ═══ ULTIMATE CINEMATIC SEQUENCE ═══ */
 /* ═══════════════════════════════════════ */
-.glitch-active {
-  animation: screenGlitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+
+/* Smooth fade out of dashboard for terminal entry */
+.smooth-terminal-active {
+  animation: shadowFadeOut 1s cubic-bezier(.25, .46, .45, .94) forwards;
 }
-@keyframes screenGlitch {
-  0% { transform: translate(0) skew(0deg); filter: invert(0) hue-rotate(0deg); }
-  20% { transform: translate(-4px, 4px) skew(2deg); filter: invert(0.8) hue-rotate(90deg); }
-  40% { transform: translate(-4px, -4px) skew(-2deg); filter: invert(0) hue-rotate(0deg); }
-  60% { transform: translate(4px, 4px) skew(0deg); filter: invert(1) hue-rotate(180deg); }
-  80% { transform: translate(4px, -4px) skew(2deg); filter: invert(0) hue-rotate(0deg); }
-  100% { transform: translate(0) skew(0deg); filter: invert(0) hue-rotate(0deg); }
+@keyframes shadowFadeOut {
+  0% { filter: brightness(1) drop-shadow(0 0 0 rgba(0,0,0,0)); }
+  100% { filter: brightness(0.2) drop-shadow(0 0 100px rgba(0,0,0,1)); }
 }
 
 .ultimate-cinematic-container {
   position: fixed; inset: 0; z-index: 10000;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Stardust Mouse Particles */
+.stardust-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10005;
+  font-size: 18px;
+  filter: drop-shadow(0 0 8px rgba(255, 133, 161, 0.8));
+  animation: magicFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes magicFade {
+  0% { transform: scale(0.2) translateY(0); opacity: 1; }
+  100% { transform: scale(1.5) translateY(-20px); opacity: 0; }
+}
+
+/* Continuous Heart Rain Override */
+.infinite-rain-overlay {
+  position: fixed; inset: 0; z-index: 10;
+  pointer-events: none; overflow: hidden;
+}
+.falling-rain-heart {
+  position: absolute; top: -50px;
+  color: var(--accent);
+  font-size: 20px;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 10px var(--accent));
+  animation: fallInfinite linear infinite;
+}
+@keyframes fallInfinite {
+  0% { transform: translateY(-50px) rotate(0deg) scale(0.5); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
 }
 
 .hacker-terminal {
@@ -1807,14 +1839,16 @@ input, select, textarea {
   opacity: 1; transform: translate(-50%, -50%) scale(1.03);
 }
 
-.flashbang-climax {
-  position: fixed; inset: 0; background: #fff; z-index: 9999;
-  animation: flashfade 4.5s ease-out forwards;
+.climax-warm-glow {
+  position: fixed; inset: 0; 
+  background: radial-gradient(circle, rgba(255,215,225,1) 0%, rgba(255,181,167,0.8) 100%);
+  z-index: 9999;
+  animation: warmGlowFade 4.5s ease-in-out forwards;
 }
-@keyframes flashfade {
+@keyframes warmGlowFade {
   0% { opacity: 0; }
-  10% { opacity: 1; }
-  25% { opacity: 1; }
+  40% { opacity: 1; }
+  60% { opacity: 1; }
   100% { opacity: 0; }
 }
 

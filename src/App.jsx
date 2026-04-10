@@ -284,9 +284,27 @@ const DAILY_QUOTES = [
   "\"Striver's SDE Sheet: The most important problems for FAANG.\"",
 ];
 
+const THEMES = [
+  { id: 'enchanted', name: 'Enchanted Dream', vars: { '--bg': 'rgba(26,16,28,0.65)', '--bg2': 'rgba(38,22,43,0.55)', '--bg3': 'rgba(56,32,60,0.75)', '--accent': '#ff85a1', '--accent2': '#ffb5a7', '--green': '#4ade80', '--yellow': '#fcd34d', '--red': '#fb7185', '--text': '#fdf2f8', '--text2': '#fbcfe8', '--border': 'rgba(255,133,161,0.25)', '--shadow-hover': '0 12px 36px rgba(255,133,161,0.35)' } },
+  { id: 'leetcode', name: 'LeetCode Classic', vars: { '--bg': 'rgba(26,26,26,0.75)', '--bg2': 'rgba(40,40,40,0.65)', '--bg3': 'rgba(51,51,51,0.75)', '--accent': '#ffa116', '--accent2': '#ffb240', '--green': '#00b8a3', '--yellow': '#ffc01e', '--red': '#ff375f', '--text': '#eff2f6', '--text2': '#8a8a8a', '--border': 'rgba(62,62,62,0.6)', '--shadow-hover': '0 8px 24px rgba(255,161,22,0.15)' } },
+  { id: 'obsidian', name: 'Obsidian Prism', vars: { '--bg': 'rgba(10,10,12,0.85)', '--bg2': 'rgba(20,20,24,0.7)', '--bg3': 'rgba(30,30,35,0.8)', '--accent': '#a855f7', '--accent2': '#d946ef', '--green': '#10b981', '--yellow': '#fbbf24', '--red': '#ef4444', '--text': '#f8fafc', '--text2': '#94a3b8', '--border': 'rgba(168,85,247,0.3)', '--shadow-hover': '0 10px 40px rgba(168,85,247,0.25)' } },
+  { id: 'ocean', name: 'Ocean Deep', vars: { '--bg': 'rgba(10,25,47,0.8)', '--bg2': 'rgba(17,34,64,0.6)', '--bg3': 'rgba(35,53,84,0.7)', '--accent': '#64ffda', '--accent2': '#48c2a9', '--green': '#34d399', '--yellow': '#fbbf24', '--red': '#f87171', '--text': '#ccd6f6', '--text2': '#8892b0', '--border': 'rgba(100,255,218,0.25)', '--shadow-hover': '0 10px 30px rgba(100,255,218,0.2)' } },
+  { id: 'midnight', name: 'Midnight Forest', vars: { '--bg': 'rgba(10,25,18,0.8)', '--bg2': 'rgba(16,40,28,0.6)', '--bg3': 'rgba(25,55,40,0.7)', '--accent': '#10b981', '--accent2': '#34d399', '--green': '#059669', '--yellow': '#fbbf24', '--red': '#ef4444', '--text': '#ecfdf5', '--text2': '#a7f3d0', '--border': 'rgba(16,185,129,0.3)', '--shadow-hover': '0 12px 30px rgba(16,185,129,0.2)' } },
+  { id: 'sunset', name: 'Sunset Mirage', vars: { '--bg': 'rgba(35,15,15,0.8)', '--bg2': 'rgba(45,20,20,0.6)', '--bg3': 'rgba(60,25,25,0.7)', '--accent': '#f97316', '--accent2': '#fb923c', '--green': '#10b981', '--yellow': '#facc15', '--red': '#dc2626', '--text': '#fff7ed', '--text2': '#ffedd5', '--border': 'rgba(249,115,22,0.3)', '--shadow-hover': '0 10px 35px rgba(249,115,22,0.25)' } },
+  { id: 'tokyo', name: 'Tokyo Night', vars: { '--bg': 'rgba(26,27,38,0.85)', '--bg2': 'rgba(36,40,59,0.7)', '--bg3': 'rgba(41,46,66,0.8)', '--accent': '#7aa2f7', '--accent2': '#bb9af7', '--green': '#9ece6a', '--yellow': '#e0af68', '--red': '#f7768e', '--text': '#c0caf5', '--text2': '#9aa5ce', '--border': 'rgba(122,162,247,0.3)', '--shadow-hover': '0 10px 40px rgba(122,162,247,0.2)' } },
+  { id: 'cyberpunk', name: 'Cyberpunk 2077', vars: { '--bg': 'rgba(15,15,15,0.9)', '--bg2': 'rgba(30,30,30,0.8)', '--bg3': 'rgba(45,45,45,0.85)', '--accent': '#fce205', '--accent2': '#ff003c', '--green': '#00ff00', '--yellow': '#ff9900', '--red': '#ff003c', '--text': '#e0e0e0', '--text2': '#fce205', '--border': 'rgba(252,226,5,0.4)', '--shadow-hover': '0 10px 30px rgba(252,226,5,0.3)' } },
+  { id: 'dracula', name: 'Dracula', vars: { '--bg': 'rgba(40,42,54,0.85)', '--bg2': 'rgba(68,71,90,0.7)', '--bg3': 'rgba(98,114,164,0.8)', '--accent': '#ff79c6', '--accent2': '#bd93f9', '--green': '#50fa7b', '--yellow': '#f1fa8c', '--red': '#ff5555', '--text': '#f8f8f2', '--text2': '#6272a4', '--border': 'rgba(255,121,198,0.3)', '--shadow-hover': '0 10px 30px rgba(255,121,198,0.2)' } },
+  { id: 'glacier', name: 'Glacier Frosted', vars: { '--bg': 'rgba(240,245,250,0.6)', '--bg2': 'rgba(255,255,255,0.5)', '--bg3': 'rgba(220,230,240,0.7)', '--accent': '#0ea5e9', '--accent2': '#38bdf8', '--green': '#10b981', '--yellow': '#f59e0b', '--red': '#ef4444', '--text': '#0f172a', '--text2': '#334155', '--border': 'rgba(14,165,233,0.3)', '--shadow-hover': '0 10px 30px rgba(14,165,233,0.2)' } },
+  { id: 'cherry', name: 'Cherry Blossom', vars: { '--bg': 'rgba(253,242,248,0.7)', '--bg2': 'rgba(255,255,255,0.6)', '--bg3': 'rgba(252,231,243,0.8)', '--accent': '#db2777', '--accent2': '#ec4899', '--green': '#059669', '--yellow': '#d97706', '--red': '#e11d48', '--text': '#4a044e', '--text2': '#831843', '--border': 'rgba(219,39,119,0.3)', '--shadow-hover': '0 10px 35px rgba(219,39,119,0.15)' } },
+  { id: 'monochrome', name: 'Monochrome Void', vars: { '--bg': 'rgba(0,0,0,0.85)', '--bg2': 'rgba(20,20,20,0.7)', '--bg3': 'rgba(40,40,40,0.8)', '--accent': '#ffffff', '--accent2': '#cccccc', '--green': '#aaaaaa', '--yellow': '#dddddd', '--red': '#555555', '--text': '#ffffff', '--text2': '#999999', '--border': 'rgba(255,255,255,0.2)', '--shadow-hover': '0 10px 40px rgba(255,255,255,0.1)' } },
+  { id: 'coffee', name: 'Coffee House', vars: { '--bg': 'rgba(35,25,20,0.8)', '--bg2': 'rgba(50,35,25,0.6)', '--bg3': 'rgba(70,50,40,0.7)', '--accent': '#d97706', '--accent2': '#f59e0b', '--green': '#10b981', '--yellow': '#fbbf24', '--red': '#ef4444', '--text': '#fef3c7', '--text2': '#fde68a', '--border': 'rgba(217,119,6,0.3)', '--shadow-hover': '0 10px 30px rgba(217,119,6,0.2)' } },
+  { id: 'solarized', name: 'Solarized Dark', vars: { '--bg': 'rgba(0,43,54,0.85)', '--bg2': 'rgba(7,54,66,0.7)', '--bg3': 'rgba(88,110,117,0.8)', '--accent': '#b58900', '--accent2': '#cb4b16', '--green': '#859900', '--yellow': '#b58900', '--red': '#dc322f', '--text': '#93a1a1', '--text2': '#657b83', '--border': 'rgba(181,137,0,0.3)', '--shadow-hover': '0 10px 30px rgba(181,137,0,0.2)' } },
+  { id: 'matrix', name: 'Hacker Green', vars: { '--bg': 'rgba(0,10,0,0.9)', '--bg2': 'rgba(0,25,0,0.7)', '--bg3': 'rgba(0,40,0,0.8)', '--accent': '#00ff00', '--accent2': '#00cc00', '--green': '#00ff00', '--yellow': '#aaee00', '--red': '#ff0000', '--text': '#00ff00', '--text2': '#008800', '--border': 'rgba(0,255,0,0.4)', '--shadow-hover': '0 10px 40px rgba(0,255,0,0.3)' } }
+];
+
 // ═══ MAIN APP ═══
 export default function App() {
-  const [view, setView] = useState('practice');
+  const [view, setView] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [questions, setQuestions] = useState(QUESTIONS);
   const [solvedIds, setSolvedIds] = useState(new Set());
@@ -305,6 +323,33 @@ export default function App() {
   // Easter Egg (The Heart-Melt Sequence)
   const [cinematicPhase, setCinematicPhase] = useState(0); // 0: off, 1: terminal, 2: video, 3: exit
   const [isChhavisVersion, setIsChhavisVersion] = useState(false);
+  const [rainHearts, setRainHearts] = useState(false);
+  const [activeTheme, setActiveTheme] = useState('enchanted');
+
+  // Apply Theme Engine
+  useEffect(() => {
+    const theme = THEMES.find(t => t.id === activeTheme) || THEMES[0];
+    Object.entries(theme.vars).forEach(([key, val]) => {
+      document.documentElement.style.setProperty(key, val);
+    });
+    Storage.set('activeTheme', activeTheme);
+  }, [activeTheme]);
+
+  // Magic Stardust Mouse Trail
+  useEffect(() => {
+    if (cinematicPhase === 0) return;
+    const handleReign = (e) => {
+      const drop = document.createElement('div');
+      drop.className = 'stardust-particle';
+      drop.style.left = e.pageX + 'px';
+      drop.style.top = e.pageY + 'px';
+      drop.innerHTML = Math.random() > 0.5 ? '✨' : '💕';
+      document.body.appendChild(drop);
+      setTimeout(() => drop.remove(), 1200);
+    };
+    window.addEventListener('mousemove', handleReign);
+    return () => window.removeEventListener('mousemove', handleReign);
+  }, [cinematicPhase]);
   
   useEffect(() => {
     let keys = '';
@@ -324,14 +369,14 @@ export default function App() {
   }, [cinematicPhase]);
 
   const runCinematicSequence = () => {
-    setCinematicPhase(1); // GLITCH + TERMINAL
+    setCinematicPhase(1); // TERMINAL FADE IN
     setTimeout(() => setCinematicPhase(2), 6500); // SHATTER -> VIDEO SHIFT -> Msg 1
     setTimeout(() => setCinematicPhase(3), 11500); // Msg 2
     setTimeout(() => setCinematicPhase(4), 16500); // Msg 3
     setTimeout(() => setCinematicPhase(5), 21500); // Msg 4
     setTimeout(() => setCinematicPhase(6), 26000); // Msg 5
     setTimeout(() => setCinematicPhase(7), 29000); // Msg 6
-    setTimeout(() => setCinematicPhase(8), 33500); // FLASH BANG
+    setTimeout(() => setCinematicPhase(8), 33500); // SOFT WARM CLIMAX
     setTimeout(() => {
        setCinematicPhase(0); 
        setIsChhavisVersion(true);
@@ -356,6 +401,8 @@ export default function App() {
       if (u) setUsername(u);
       const key = await Storage.get('apiKey');
       if (key) { setApiKey(key); setApiKeyInput(key); }
+      const themeVal = await Storage.get('activeTheme');
+      if (themeVal) setActiveTheme(themeVal);
       const cv = await Storage.get('chhavisVersion');
       if (cv) setIsChhavisVersion(true);
       const hm = await Storage.get('heatmap');
@@ -440,7 +487,7 @@ export default function App() {
   ];
 
   return (
-    <div className={`app-layout ${cinematicPhase === 1 ? 'glitch-active' : ''}`}>
+    <div className={`app-layout ${cinematicPhase === 1 ? 'smooth-terminal-active' : ''}`}>
       {/* Background Videos */}
       <video autoPlay loop muted playsInline id="bg-video" key={cinematicPhase > 1 ? 'cinematic' : 'dreamy'}>
         <source src={
@@ -449,6 +496,20 @@ export default function App() {
             : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
         } type="video/webm" />
       </video>
+
+      {/* Infinite Rain Component Overlay */}
+      {rainHearts && (
+        <div className="infinite-rain-overlay">
+          {Array.from({ length: 45 }).map((_, i) => (
+            <div key={`rh-${i}`} className="falling-rain-heart" style={{
+              left: `${Math.random()*100}vw`,
+              animationDelay: `${Math.random()*6}s`,
+              animationDuration: `${3 + Math.random()*5}s`,
+              transform: `scale(${0.5 + Math.random()})`
+            }}>❤️</div>
+          ))}
+        </div>
+      )}
 
       {/* The Ultimate Cinematic Sequence */}
       {cinematicPhase > 0 && (
@@ -470,7 +531,7 @@ export default function App() {
               <div className="cinematic-letterbox top"></div>
               <div className="cinematic-letterbox bottom"></div>
 
-              {cinematicPhase === 8 && <div className="flashbang-climax"></div>}
+              {cinematicPhase === 8 && <div className="climax-warm-glow"></div>}
 
               <div className="cinematic-text-center">
                 <h1 className={`soul-text ${cinematicPhase === 2 ? 'visible' : ''}`}>
@@ -528,6 +589,15 @@ export default function App() {
               setApiKey(apiKeyInput);
               alert('API Key Saved (local storage)');
             }}>Save Configuration</button>
+          </div>
+
+          <div className="form-group" style={{ marginTop: '10px' }}>
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Theme Customization</label>
+            <select className="input" value={activeTheme} onChange={e => setActiveTheme(e.target.value)} style={{ padding: '10px' }}>
+              {THEMES.map(theme => (
+                <option key={theme.id} value={theme.id}>{theme.name}</option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group" style={{ marginTop: '20px' }}>
@@ -609,7 +679,9 @@ export default function App() {
           </div>
           <div className="topbar-right">
             {isChhavisVersion && (
-              <span className="chhavis-version-tag">❤️ [ Chhavi's Version ]</span>
+              <span className="chhavis-version-tag" onClick={() => setRainHearts(!rainHearts)} title="Toggle Infinite Heart Rain" style={{ cursor: 'pointer' }}>
+                ❤️ [ {rainHearts ? 'Rain Active' : "Chhavi's Version"} ]
+              </span>
             )}
             <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>
               {easySolved}E / {medSolved}M / {hardSolved}H
