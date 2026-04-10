@@ -5,6 +5,8 @@ import CHAPTERS from './data/chapters'
 import Storage from './utils/storage'
 import { callGemini, callGeminiWithHistory, setApiKey, getApiKey } from './utils/gemini'
 import { runCode, loadPyodideRuntime, LANGUAGES } from './utils/codeRunner'
+import { LandingPage } from './components/LandingPage'
+import { LoginPage } from './components/LoginPage'
 
 // ═══ ICONS (inline SVGs) ═══
 const Icons = {
@@ -304,6 +306,10 @@ const THEMES = [
 
 // ═══ MAIN APP ═══
 export default function App() {
+  const [appReady, setAppReady] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null); // The logged-in user email
+  const [authState, setAuthState] = useState('landing'); // 'landing', 'login', 'app'
+  
   const [view, setView] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [questions, setQuestions] = useState(QUESTIONS);
@@ -324,16 +330,84 @@ export default function App() {
   const [cinematicPhase, setCinematicPhase] = useState(0); // 0: off, 1: terminal, 2: video, 3: exit
   const [isChhavisVersion, setIsChhavisVersion] = useState(false);
   const [rainHearts, setRainHearts] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('enchanted');
+  const [activeTheme, setActiveTheme] = useState('obsidian');
+
+  // Multi-user Data Loader
+  const loadUserData = useCallback(async (email) => {
+    Storage.setPrefix(email);
+    const solved = await Storage.get('solvedIds');
+    setSolvedIds(new Set(solved || []));
+    const bookmarks = await Storage.get('bookmarkedIds');
+    setBookmarkedIds(new Set(bookmarks || []));
+    const n = await Storage.get('notes');
+    setNotes(n || {});
+    const s = await Storage.get('streak');
+    setStreak(s || 0);
+    const ls = await Storage.get('longestStreak');
+    setLongestStreak(ls || 0);
+    const u = await Storage.get('username');
+    setUsername(u || (email === 'chhavi' ? 'Chhavi ✨' : 'DSA Warrior'));
+    const key = await Storage.get('apiKey');
+    if (key) { setApiKey(key); setApiKeyInput(key); }
+    const themeVal = await Storage.get('activeTheme');
+    if (themeVal) {
+      setActiveTheme(themeVal);
+    } else {
+      // Darker default for regular users, warm pink for Chhavi
+      setActiveTheme(email === 'chhavi' ? 'enchanted' : 'obsidian');
+    }
+    const cv = await Storage.get('chhavisVersion');
+    if (cv === true || email === 'chhavi') {
+      setIsChhavisVersion(true);
+      if (email === 'chhavi') {
+        Storage.set('chhavisVersion', true);
+        setRainHearts(true); // Automatically start rain for Chhavi
+      }
+    } else {
+      setIsChhavisVersion(false);
+      setRainHearts(false);
+    }
+    const hm = await Storage.get('heatmap');
+    setHeatmapData(hm || {});
+    const la = await Storage.get('lastActivity');
+    setLastActivity(la || []);
+    const lq = await Storage.get('lastQuestion');
+    if (lq) setSelectedQuestion(lq);
+  }, []);
+
+  const handleLogin = (email) => {
+    setCurrentUser(email);
+    localStorage.setItem('mirei_last_user', email);
+    loadUserData(email);
+    setAuthState('app');
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('mirei_last_user');
+    setAuthState('login');
+  };
+
+  // Initial Auth Check
+  useEffect(() => {
+    const lastUser = localStorage.getItem('mirei_last_user');
+    if (lastUser) {
+      setCurrentUser(lastUser);
+      loadUserData(lastUser);
+      setAuthState('app');
+    }
+    setAppReady(true);
+  }, [loadUserData]);
 
   // Apply Theme Engine
   useEffect(() => {
+    if (!currentUser) return;
     const theme = THEMES.find(t => t.id === activeTheme) || THEMES[0];
     Object.entries(theme.vars).forEach(([key, val]) => {
       document.documentElement.style.setProperty(key, val);
     });
     Storage.set('activeTheme', activeTheme);
-  }, [activeTheme]);
+  }, [activeTheme, currentUser]);
 
   // Magic Stardust Mouse Trail
   useEffect(() => {
@@ -351,68 +425,133 @@ export default function App() {
     return () => window.removeEventListener('mousemove', handleReign);
   }, [cinematicPhase]);
   
+  // Easter Egg Listener — Chhavi-Exclusive Secret Codes
   useEffect(() => {
+    if (authState !== 'app') return;
+
     let keys = '';
-    const secret = 'chhavi';
+    const secrets = {
+      // Main cinematic sequence — works for everyone
+      chhavi: () => { if (cinematicPhase === 0) runCinematicSequence(); },
+      
+      // ═══ CHHAVI-EXCLUSIVE EASTER EGGS ═══
+      gorgeous: () => {
+        if (currentUser !== 'chhavi') return;
+        // Screen blushes pink like her cheeks
+        document.body.classList.add('blush-effect');
+        // Spawn floating compliment
+        spawnFloatingText('You\'re gorgeous, Chhavi ✨', '#ff85a1');
+        setTimeout(() => document.body.classList.remove('blush-effect'), 5000);
+      },
+      iloveyou: () => {
+        if (currentUser !== 'chhavi') return;
+        triggerShootingStars();
+        setTimeout(() => spawnFloatingText('To the moon and back 🌙', '#fcd34d'), 1000);
+      },
+      princess: () => {
+        if (currentUser !== 'chhavi') return;
+        // Golden confetti explosion
+        triggerConfetti();
+        spawnFloatingText('👑 The Queen Has Arrived 👑', '#fbbf24');
+      },
+      aurora: () => {
+        if (currentUser !== 'chhavi') return;
+        // Northern lights effect across the screen
+        document.body.classList.add('aurora-effect');
+        setTimeout(() => document.body.classList.remove('aurora-effect'), 8000);
+      },
+      forever: () => {
+        if (currentUser !== 'chhavi') return;
+        // Love notes float up from bottom
+        const notes = [
+          'You make my code compile on the first try 💝',
+          'My favorite bug is falling for you 🐛💕',
+          'You\'re the semicolon to my JavaScript ✨',
+          'console.log("I love you, Chhavi") 💖',
+          'while(true) { love(chhavi); } 🔄💕',
+        ];
+        notes.forEach((note, i) => {
+          setTimeout(() => spawnLoveNote(note), i * 1200);
+        });
+      },
+      heartbeat: () => {
+        if (currentUser !== 'chhavi') return;
+        // Screen pulses like a heartbeat
+        document.body.classList.add('heartbeat-effect');
+        spawnFloatingText('💓 My heart beats for you 💓', '#fb7185');
+        setTimeout(() => document.body.classList.remove('heartbeat-effect'), 6000);
+      },
+    };
+
     const handleKeyDown = (e) => {
       if (e.key && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         keys += e.key.toLowerCase();
-        if (keys.length > 20) keys = keys.slice(-20);
-        if (keys.includes(secret) && cinematicPhase === 0) {
-          keys = '';
-          runCinematicSequence();
-        }
+        if (keys.length > 30) keys = keys.slice(-30);
+        
+        Object.keys(secrets).forEach(secret => {
+          if (keys.includes(secret)) {
+            keys = '';
+            secrets[secret]();
+          }
+        });
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cinematicPhase]);
+  }, [cinematicPhase, authState, currentUser]);
 
-  const runCinematicSequence = () => {
-    setCinematicPhase(1); // TERMINAL FADE IN
-    setTimeout(() => setCinematicPhase(2), 6500); // SHATTER -> VIDEO SHIFT -> Msg 1
-    setTimeout(() => setCinematicPhase(3), 11500); // Msg 2
-    setTimeout(() => setCinematicPhase(4), 16500); // Msg 3
-    setTimeout(() => setCinematicPhase(5), 21500); // Msg 4
-    setTimeout(() => setCinematicPhase(6), 26000); // Msg 5
-    setTimeout(() => setCinematicPhase(7), 29000); // Msg 6
-    setTimeout(() => setCinematicPhase(8), 33500); // SOFT WARM CLIMAX
-    setTimeout(() => {
-       setCinematicPhase(0); 
-       setIsChhavisVersion(true);
-       Storage.set('chhavisVersion', true);
-    }, 38000); // Exit
+  // ═══ EASTER EGG HELPER FUNCTIONS ═══
+
+  const triggerShootingStars = () => {
+    for (let i = 0; i < 12; i++) {
+      setTimeout(() => {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+        star.style.top = Math.random() * 60 + '%';
+        star.style.left = '-150px';
+        star.style.animationDuration = `${1.5 + Math.random()}s`;
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 3000);
+      }, i * 200);
+    }
   };
 
-  // Load persisted data
-  useEffect(() => {
-    (async () => {
-      const solved = await Storage.get('solvedIds');
-      if (solved) setSolvedIds(new Set(solved));
-      const bookmarks = await Storage.get('bookmarkedIds');
-      if (bookmarks) setBookmarkedIds(new Set(bookmarks));
-      const n = await Storage.get('notes');
-      if (n) setNotes(n);
-      const s = await Storage.get('streak');
-      if (s) setStreak(s);
-      const ls = await Storage.get('longestStreak');
-      if (ls) setLongestStreak(ls);
-      const u = await Storage.get('username');
-      if (u) setUsername(u);
-      const key = await Storage.get('apiKey');
-      if (key) { setApiKey(key); setApiKeyInput(key); }
-      const themeVal = await Storage.get('activeTheme');
-      if (themeVal) setActiveTheme(themeVal);
-      const cv = await Storage.get('chhavisVersion');
-      if (cv) setIsChhavisVersion(true);
-      const hm = await Storage.get('heatmap');
-      if (hm) setHeatmapData(hm);
-      const la = await Storage.get('lastActivity');
-      if (la) setLastActivity(la);
-      const lq = await Storage.get('lastQuestion');
-      if (lq) setSelectedQuestion(lq);
-    })();
-  }, []);
+  const triggerConfetti = () => {
+    const colors = ['#ff85a1', '#fbbf24', '#a855f7', '#4ade80', '#38bdf8', '#f472b6'];
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+        piece.style.animationDelay = `${Math.random() * 0.5}s`;
+        piece.style.width = `${6 + Math.random() * 8}px`;
+        piece.style.height = `${6 + Math.random() * 8}px`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 5000);
+      }, i * 40);
+    }
+  };
+
+  const spawnFloatingText = (text, color) => {
+    const el = document.createElement('div');
+    el.className = 'easter-floating-text';
+    el.textContent = text;
+    el.style.color = color;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  };
+
+  const spawnLoveNote = (text) => {
+    const el = document.createElement('div');
+    el.className = 'love-note-float';
+    el.textContent = text;
+    el.style.left = 10 + Math.random() * 80 + '%';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
+  };
+
 
   // Persist helpers
   const markSolved = useCallback(async (id) => {
@@ -462,6 +601,22 @@ export default function App() {
     await Storage.set('apiKey', key);
   }, []);
 
+  const runCinematicSequence = () => {
+    setCinematicPhase(1); // TERMINAL FADE IN
+    setTimeout(() => setCinematicPhase(2), 6500); // SHATTER -> VIDEO SHIFT -> Msg 1
+    setTimeout(() => setCinematicPhase(3), 11500); // Msg 2
+    setTimeout(() => setCinematicPhase(4), 16500); // Msg 3
+    setTimeout(() => setCinematicPhase(5), 21500); // Msg 4
+    setTimeout(() => setCinematicPhase(6), 26000); // Msg 5
+    setTimeout(() => setCinematicPhase(7), 29000); // Msg 6
+    setTimeout(() => setCinematicPhase(8), 33500); // SOFT WARM CLIMAX
+    setTimeout(() => {
+       setCinematicPhase(0); 
+       setIsChhavisVersion(true);
+       Storage.set('chhavisVersion', true);
+    }, 38000); // Exit
+  };
+
   const openQuestion = useCallback((id) => {
     setSelectedQuestion(id);
     setView('practice');
@@ -485,6 +640,16 @@ export default function App() {
     { id: 'skillbuilder', icon: Icons.code, label: 'Skill Builder' },
     { id: 'tutor', icon: Icons.brain, label: 'AI Tutor' },
   ];
+
+  if (!appReady) return <div className="loading-screen text-white flex items-center justify-center min-h-screen bg-black text-2xl font-bold tracking-widest animate-pulse">Initializing Mirei Architecture...</div>;
+
+  if (authState === 'landing') {
+    return <LandingPage onGetStarted={() => setAuthState('login')} />;
+  }
+
+  if (authState === 'login') {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   return (
     <div className={`app-layout ${cinematicPhase === 1 ? 'smooth-terminal-active' : ''}`}>
@@ -601,7 +766,11 @@ export default function App() {
           </div>
 
           <div className="form-group" style={{ marginTop: '20px' }}>
-            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Danger Zone</label>
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>User Session</label>
+            <button className="btn btn-secondary w-full justify-center mb-4" 
+              onClick={handleLogout}>
+              Logout of Session
+            </button>
             <button className="btn btn-secondary w-full justify-center" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}
               onClick={async () => {
                 if (confirm('Are you sure? This will reset all your solved questions and progress.')) {
