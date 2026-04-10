@@ -433,11 +433,11 @@ export default function App() {
   return (
     <div className="app-layout">
       {/* Dynamic 4K Video Background */}
-      <video autoPlay loop muted playsInline id="bg-video" key={showEasterEgg ? 'cinematic' : 'earthy'}>
+      <video autoPlay loop muted playsInline id="bg-video" key={showEasterEgg ? 'cinematic' : 'dreamy'}>
         <source src={
           showEasterEgg 
             ? "https://upload.wikimedia.org/wikipedia/commons/transcode/1/13/A_cherry_blossom_branch_-_Pexels.webm/A_cherry_blossom_branch_-_Pexels.webm.1080p.vp9.webm"
-            : "https://upload.wikimedia.org/wikipedia/commons/transcode/0/05/Pexels_Videos_1093662.webm/Pexels_Videos_1093662.webm.1080p.vp9.webm"
+            : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
         } type="video/webm" />
       </video>
 
@@ -460,31 +460,66 @@ export default function App() {
         </div>
       )}
 
-      {/* Settings Drawer */}
+      {/* Advanced Settings Drawer */}
       <div className={`settings-overlay ${showSettings ? 'open' : ''}`} onClick={() => setShowSettings(false)} />
       <div className={`settings-drawer ${showSettings ? 'open' : ''}`}>
         <div className="settings-drawer-header">
           <h2>Application Settings</h2>
           <button onClick={() => setShowSettings(false)}>{Icons.close}</button>
         </div>
-        <div className="settings-panel space-y-4">
-          <label>Google Gemini API Key</label>
-          <input 
-            className="input" 
-            type="password" 
-            placeholder="AI Studio API Key..."
-            value={apiKeyInput}
-            onChange={e => setApiKeyInput(e.target.value)}
-          />
-          <button className="btn btn-primary w-full justify-center" onClick={() => {
-            setApiKey(apiKeyInput);
-            alert('API Key Saved (local storage)');
-            setShowSettings(false);
-          }}>Save Configuration</button>
-          <p className="text-sm" style={{color: 'var(--text2)', marginTop: '20px', lineHeight: 1.5}}>
-            Using the LeetCode Dark Interface. <br/>
-            Running Pyodide WASM Runtime. <br/>
-            Build: MIREI Alpha-2.4
+        <div className="settings-panel space-y-4" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          <div className="form-group">
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Username</label>
+            <input 
+              className="input" 
+              value={username} 
+              onChange={e => { setUsername(e.target.value); Storage.set('username', e.target.value); }} 
+            />
+          </div>
+
+          <div className="form-group">
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Google Gemini API Key</label>
+            <input 
+              className="input" 
+              type="password" 
+              placeholder="AI Studio API Key..."
+              value={apiKeyInput}
+              onChange={e => setApiKeyInput(e.target.value)}
+            />
+            <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
+              setApiKey(apiKeyInput);
+              alert('API Key Saved (local storage)');
+            }}>Save Configuration</button>
+          </div>
+
+          <div className="form-group" style={{ marginTop: '20px' }}>
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Danger Zone</label>
+            <button className="btn btn-secondary w-full justify-center" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}
+              onClick={async () => {
+                if (confirm('Are you sure? This will reset all your solved questions and progress.')) {
+                  setSolvedIds(new Set());
+                  setBookmarkedIds(new Set());
+                  setNotes({});
+                  setStreak(0);
+                  setHeatmapData({});
+                  setLastActivity([]);
+                  await Storage.set('solvedIds', []);
+                  await Storage.set('bookmarkedIds', []);
+                  await Storage.set('notes', {});
+                  await Storage.set('streak', 0);
+                  await Storage.set('heatmap', {});
+                  await Storage.set('lastActivity', []);
+                }
+              }}>
+              Reset All Progress
+            </button>
+          </div>
+
+          <p className="text-sm" style={{color: 'var(--text2)', marginTop: 'auto', lineHeight: 1.5, fontSize: '12px'}}>
+            UI State: Enchanted Vibe.<br/>
+            Running Pyodide WASM Runtime.<br/>
+            Build: MIREI Alpha-2.5
           </p>
         </div>
       </div>
@@ -506,7 +541,7 @@ export default function App() {
         </nav>
         <div className="sidebar-footer">
           <div className="sidebar-streak">
-            <span className="fire" style={{ color: 'var(--yellow)' }}>{Icons.fire}</span>
+            <span className="fire" style={{ color: 'var(--yellow)', filter: 'drop-shadow(0 0 8px var(--yellow))' }}>{Icons.fire}</span>
             <span>{streak} day streak</span>
           </div>
           <div className="sidebar-progress">
@@ -536,7 +571,7 @@ export default function App() {
               onKeyDown={e => { if (e.key === 'Enter' && searchQuery) { setView('practice'); }}} />
           </div>
           <div className="topbar-right">
-            <span style={{ fontSize: 13, color: 'var(--text2)' }}>
+            <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>
               {easySolved}E / {medSolved}M / {hardSolved}H
             </span>
           </div>
@@ -554,56 +589,6 @@ export default function App() {
           {view === 'tutor' && <AITutor />}
         </main>
       </div>
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <div className="modal-overlay" onClick={() => setShowSettings(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2>Settings</h2>
-              <button className="btn-icon" onClick={() => setShowSettings(false)}>{Icons.close}</button>
-            </div>
-            <div className="form-group" style={{ marginBottom: 16 }}>
-              <label>Username</label>
-              <input className="input" value={username} onChange={e => { setUsername(e.target.value); Storage.set('username', e.target.value); }} />
-            </div>
-            <div className="form-group" style={{ marginBottom: 16 }}>
-              <label>Gemini API Key</label>
-              <input className="input" type="password" placeholder="sk-ant-..." value={apiKeyInput}
-                onChange={e => setApiKeyInput(e.target.value)} />
-              <button className="btn btn-primary" style={{ marginTop: 8 }}
-                onClick={() => saveApiKey(apiKeyInput)}>
-                Save API Key
-              </button>
-              <p style={{ fontSize: 12, color: 'var(--text2)', marginTop: 4 }}>
-                Required for AI features. Key is stored locally only.
-              </p>
-            </div>
-            <div className="form-group">
-              <label>Reset Progress</label>
-              <button className="btn btn-secondary" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}
-                onClick={async () => {
-                  if (confirm('Are you sure? This will reset all progress.')) {
-                    setSolvedIds(new Set());
-                    setBookmarkedIds(new Set());
-                    setNotes({});
-                    setStreak(0);
-                    setHeatmapData({});
-                    setLastActivity([]);
-                    await Storage.set('solvedIds', []);
-                    await Storage.set('bookmarkedIds', []);
-                    await Storage.set('notes', {});
-                    await Storage.set('streak', 0);
-                    await Storage.set('heatmap', {});
-                    await Storage.set('lastActivity', []);
-                  }
-                }}>
-                Reset All Progress
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

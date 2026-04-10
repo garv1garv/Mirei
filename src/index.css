@@ -1,28 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  /* LeetCode Dark Theme Variables */
-  --bg: rgba(26, 26, 26, 0.75);         /* Transparent LeetCode Dark Background */
-  --bg2: rgba(40, 40, 40, 0.65);        /* Glassmorphic Secondary */
-  --bg3: rgba(51, 51, 51, 0.75);        /* Inner Panel Background */
-  --accent: #ffa116;                    /* LeetCode Orange */
-  --accent2: #ffb240;
-  --green: #00b8a3;                     /* LeetCode Accepted Green */
-  --yellow: #ffc01e;
-  --red: #ff375f;                       /* LeetCode Wrong/Hard Red */
-  --text: #eff2f6;                      /* Crisp White/Gray */
-  --text2: #8a8a8a;                     /* Secondary Text */
-  --border: rgba(62, 62, 62, 0.6);      /* Subtle Border */
-  --code-bg: rgba(41, 41, 41, 0.85);
+  /* Enchanted Dreamy Theme Variables (Warm/Anti-Depressive) */
+  --bg: rgba(26, 16, 28, 0.65);         /* Transparent Deep Violet */
+  --bg2: rgba(38, 22, 43, 0.55);        /* Glassmorphic Violet/Pink */
+  --bg3: rgba(56, 32, 60, 0.75);        /* Inner Panel Background */
+  --accent: #ff85a1;                    /* Soft Neon Pink */
+  --accent2: #ffb5a7;                   /* Peach / Coral */
+  --green: #4ade80;                     /* Soft Bright Green */
+  --yellow: #fcd34d;                    /* Warm Yellow */
+  --red: #fb7185;                       /* Soft Coral Red */
+  --text: #fdf2f8;                      /* Pinkish White */
+  --text2: #fbcfe8;                     /* Muted Pink */
+  --border: rgba(255, 133, 161, 0.25);  /* Subtle Pink Border */
+  --code-bg: rgba(35, 18, 40, 0.85);    /* Darker Violet Code block */
   
   --sidebar-width: 250px;
   --topbar-height: 56px;
   --radius: 8px;
   --radius-lg: 12px;
-  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 8px 24px rgba(255, 161, 22, 0.15); /* Orange Glow */
-  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --glass-blur: blur(20px);             /* Central variable for Glassmorphism */
+  --shadow: 0 8px 32px rgba(255, 133, 161, 0.15); /* Soft pink shadow */
+  --shadow-hover: 0 12px 36px rgba(255, 133, 161, 0.35); /* Pink Glow */
+  --transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --glass-blur: blur(25px);             /* Central variable for Glassmorphism */
+}
+
+@keyframes ambientFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0px); }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -218,6 +224,7 @@ body {
   padding: 20px;
   transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   backdrop-filter: var(--glass-blur);
+  animation: ambientFloat 6s ease-in-out infinite;
 }
 .card:hover { 
   border-color: rgba(255, 161, 22, 0.4); 
