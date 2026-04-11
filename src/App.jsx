@@ -3,7 +3,7 @@ import './index.css'
 import QUESTIONS, { TOPICS, COMPANIES, DIFFICULTY_COLORS } from './data/questions'
 import CHAPTERS from './data/chapters'
 import Storage from './utils/storage'
-import { callGemini, callGeminiWithHistory, setApiKey, getApiKey } from './utils/gemini'
+import { callAi as callGemini, callAiWithHistory as callGeminiWithHistory, setGeminiApiKey, setAnthropicApiKey, setAiProvider } from './utils/ai'
 import { runCode, loadPyodideRuntime, LANGUAGES } from './utils/codeRunner'
 import { LandingPage } from './components/LandingPage'
 import { LoginPage } from './components/LoginPage'
@@ -322,6 +322,8 @@ export default function App() {
   const [longestStreak, setLongestStreak] = useState(0);
   const [username, setUsername] = useState('DSA Warrior');
   const [apiKeyInput, setApiKeyInput] = useState('');
+  const [anthropicKeyInput, setAnthropicKeyInput] = useState('');
+  const [aiProviderState, setAiProviderState] = useState('gemini');
   const [showSettings, setShowSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedQuestion, setSelectedQuestion] = useState(null);
@@ -350,7 +352,11 @@ export default function App() {
     const u = await Storage.get('username');
     setUsername(u || (email === 'chhavi' ? 'Chhavi ✨' : 'DSA Warrior'));
     const key = await Storage.get('apiKey');
-    if (key) { setApiKey(key); setApiKeyInput(key); }
+    if (key) { setGeminiApiKey(key); setApiKeyInput(key); }
+    const antKey = await Storage.get('anthropicKey');
+    if (antKey) { setAnthropicApiKey(antKey); setAnthropicKeyInput(antKey); }
+    const provider = await Storage.get('aiProvider');
+    if (provider) { setAiProvider(provider); setAiProviderState(provider); }
     const themeVal = await Storage.get('activeTheme');
     if (themeVal) {
       setActiveTheme(themeVal);
@@ -1274,9 +1280,21 @@ export default function App() {
   }, []);
 
   const saveApiKey = useCallback(async (key) => {
-    setApiKey(key);
+    setGeminiApiKey(key);
     setApiKeyInput(key);
     await Storage.set('apiKey', key);
+  }, []);
+
+  const saveAnthropicKey = useCallback(async (key) => {
+    setAnthropicApiKey(key);
+    setAnthropicKeyInput(key);
+    await Storage.set('anthropicKey', key);
+  }, []);
+
+  const changeProvider = useCallback(async (prov) => {
+    setAiProvider(prov);
+    setAiProviderState(prov);
+    await Storage.set('aiProvider', prov);
   }, []);
 
   const runCinematicSequence = () => {
@@ -1490,19 +1508,46 @@ export default function App() {
           </div>
 
           <div className="form-group">
-            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Google Gemini API Key</label>
-            <input 
-              className="input" 
-              type="password" 
-              placeholder="AI Studio API Key..."
-              value={apiKeyInput}
-              onChange={e => setApiKeyInput(e.target.value)}
-            />
-            <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
-              saveApiKey(apiKeyInput);
-              alert('API Key Saved (local storage)');
-            }}>Save Configuration</button>
+            <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>AI Provider</label>
+            <select className="input" value={aiProviderState} onChange={e => changeProvider(e.target.value)} style={{ padding: '10px' }}>
+              <option value="gemini">Google Gemini (Flash)</option>
+              <option value="anthropic">Anthropic (Claude 3 Haiku)</option>
+            </select>
           </div>
+
+          {aiProviderState === 'gemini' && (
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Google Gemini API Key</label>
+              <input 
+                className="input" 
+                type="password" 
+                placeholder="AI Studio API Key..."
+                value={apiKeyInput}
+                onChange={e => setApiKeyInput(e.target.value)}
+              />
+              <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
+                saveApiKey(apiKeyInput);
+                alert('Gemini API Key Saved (local storage)');
+              }}>Save Gemini Key</button>
+            </div>
+          )}
+
+          {aiProviderState === 'anthropic' && (
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Anthropic API Key</label>
+              <input 
+                className="input" 
+                type="password" 
+                placeholder="Anthropic Console API Key..."
+                value={anthropicKeyInput}
+                onChange={e => setAnthropicKeyInput(e.target.value)}
+              />
+              <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
+                saveAnthropicKey(anthropicKeyInput);
+                alert('Anthropic API Key Saved (local storage)');
+              }}>Save Anthropic Key</button>
+            </div>
+          )}
 
           <div className="form-group" style={{ marginTop: '10px' }}>
             <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Theme Customization</label>
