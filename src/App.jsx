@@ -1372,6 +1372,12 @@ export default function App() {
               : "https://upload.wikimedia.org/wikipedia/commons/transcode/9/91/Time_Lapse_Video_of_the_Clouds.webm/Time_Lapse_Video_of_the_Clouds.webm.1080p.vp9.webm"
           } type="video/webm" />
         </video>
+        
+        {/* Mobile Sidebar Overlay */}
+        <div 
+          className={`sidebar-mobile-overlay ${sidebarOpen ? 'open' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
 
         <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-logo">
