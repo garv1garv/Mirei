@@ -3205,9 +3205,17 @@ Your teaching style:
 - You know ALL patterns: sliding window, two pointers, monotonic stack, DP states, graph traversals, segment trees, and more
 - When asked about a problem, you FIRST ask if they want a hint, an approach overview, or a full solution
 - You give code in Python AND Java when providing solutions
-- You use markdown formatting: **bold** for key terms, \`code\` for inline code, and code blocks with language tags
+- You use simple markdown formatting: **bold** for key terms, \`code\` for inline code, and code blocks with language tags
 - You are encouraging but honest — you point out common mistakes directly
 - You draw connections between problems ("This is similar to X because...")
+
+CRITICAL FORMATTING RULES:
+- NEVER use LaTeX notation like $\\rightarrow$, $\\times$, $O(n)$, etc. Use plain Unicode arrows → and plain text instead.
+- Use → for arrows, not $\\rightarrow$ or \\rightarrow or any LaTeX.
+- Write complexity as O(n), O(n log n), etc. in plain text WITHOUT dollar signs or LaTeX wrappers.
+- Do NOT wrap text in dollar signs $ ever.
+- Use numbered lists (1. 2. 3.) and bullet points (- or •) for structure.
+- Keep formatting clean and readable as plain text with minimal markdown.
 
 ${mode === 'search' ? 'The user has enabled web search mode. Act as if you can search the latest competitive programming resources, LeetCode discussions, and editorial solutions.' : ''}
 ${mode === 'think' ? 'The user wants deep analysis. Think step-by-step, consider multiple approaches, analyze time/space complexity of each, and recommend the optimal one with detailed reasoning.' : ''}
@@ -3236,10 +3244,65 @@ ${mode === 'canvas' ? 'The user is in canvas/whiteboard mode. Help them visualiz
     { label: 'Debug my code', icon: '🐛', prompt: "I'll paste my code next. Please review it for bugs, edge cases, and optimization opportunities." },
   ];
 
+  // Clean up LaTeX/special symbols from AI responses
+  const sanitizeAIText = (text) => {
+    if (!text) return text;
+    return text
+      // Remove LaTeX dollar-sign wrappers: $...$ → content inside
+      .replace(/\$\\rightarrow\$/g, '→')
+      .replace(/\$\\leftarrow\$/g, '←')
+      .replace(/\$\\times\$/g, '×')
+      .replace(/\$\\div\$/g, '÷')
+      .replace(/\$\\leq\$/g, '≤')
+      .replace(/\$\\geq\$/g, '≥')
+      .replace(/\$\\neq\$/g, '≠')
+      .replace(/\$\\approx\$/g, '≈')
+      .replace(/\$\\infty\$/g, '∞')
+      .replace(/\$\\sum\$/g, 'Σ')
+      .replace(/\$\\pi\$/g, 'π')
+      .replace(/\$\\theta\$/g, 'θ')
+      .replace(/\$\\alpha\$/g, 'α')
+      .replace(/\$\\beta\$/g, 'β')
+      .replace(/\$\\log\$/g, 'log')
+      // Remove standalone LaTeX commands (without dollar signs)
+      .replace(/\\rightarrow/g, '→')
+      .replace(/\\leftarrow/g, '←')
+      .replace(/\\times/g, '×')
+      .replace(/\\div/g, '÷')
+      .replace(/\\leq/g, '≤')
+      .replace(/\\geq/g, '≥')
+      .replace(/\\neq/g, '≠')
+      .replace(/\\approx/g, '≈')
+      .replace(/\\infty/g, '∞')
+      .replace(/\\sum/g, 'Σ')
+      .replace(/\\pi/g, 'π')
+      .replace(/\\theta/g, 'θ')
+      .replace(/\\n(?!ot)/g, '') // \n that aren't \not
+      // Unwrap remaining $...$ LaTeX expressions → just the inner text
+      .replace(/\$([^$]+)\$/g, '$1')
+      // Clean up leftover backslashes from LaTeX commands like \text{}, \mathbf{}
+      .replace(/\\text\{([^}]*)\}/g, '$1')
+      .replace(/\\mathbf\{([^}]*)\}/g, '$1')
+      .replace(/\\textbf\{([^}]*)\}/g, '$1')
+      .replace(/\\textit\{([^}]*)\}/g, '$1')
+      .replace(/\\mathrm\{([^}]*)\}/g, '$1')
+      .replace(/\\mathcal\{([^}]*)\}/g, '$1')
+      .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1/$2)')
+      .replace(/\\sqrt\{([^}]*)\}/g, '√($1)')
+      .replace(/\\cdot/g, '·')
+      .replace(/\\ldots/g, '...')
+      .replace(/\\dots/g, '...')
+      // Remove any remaining stray backslashes before common LaTeX commands
+      .replace(/\\(?=[a-zA-Z]+\b)/g, '')
+      // Clean up doubled-up spaces
+      .replace(/  +/g, ' ');
+  };
+
   // Simple markdown-ish rendering
   const renderContent = (text) => {
     if (!text) return null;
-    return text.split('\n').map((line, i) => {
+    const cleaned = sanitizeAIText(text);
+    return cleaned.split('\n').map((line, i) => {
       // Code blocks aren't handled inline — just format bold/code
       let html = line
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -3247,6 +3310,7 @@ ${mode === 'canvas' ? 'The user is in canvas/whiteboard mode. Help them visualiz
         .replace(/^### (.+)/, '<span class="msg-h3">$1</span>')
         .replace(/^## (.+)/, '<span class="msg-h2">$1</span>')
         .replace(/^# (.+)/, '<span class="msg-h1">$1</span>')
+        .replace(/^\d+\.\s+(.+)/, '<span class="msg-bullet">$&</span>')
         .replace(/^[•\-\*] (.+)/, '<span class="msg-bullet">• $1</span>');
       return <p key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
     });
