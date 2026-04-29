@@ -3,7 +3,7 @@ import './index.css'
 import QUESTIONS, { TOPICS, COMPANIES, DIFFICULTY_COLORS } from './data/questions'
 import CHAPTERS from './data/chapters'
 import Storage from './utils/storage'
-import { callAi as callGemini, callAiWithHistory as callGeminiWithHistory, setGeminiApiKey, setAnthropicApiKey, setAiProvider } from './utils/ai'
+import { callAi as callGemini, callAiWithHistory as callGeminiWithHistory, setGeminiApiKey, setAnthropicApiKey, setAiProvider, setOllamaUrl, setOllamaModel } from './utils/ai'
 import { runCode, loadPyodideRuntime, LANGUAGES } from './utils/codeRunner'
 import { LandingPage } from './components/LandingPage'
 import { LoginPage } from './components/LoginPage'
@@ -323,6 +323,8 @@ export default function App() {
   const [username, setUsername] = useState('DSA Warrior');
   const [apiKeyInput, setApiKeyInput] = useState('');
   const [anthropicKeyInput, setAnthropicKeyInput] = useState('');
+  const [ollamaUrlInput, setOllamaUrlInput] = useState('http://localhost:11434');
+  const [ollamaModelInput, setOllamaModelInput] = useState('llama3');
   const [aiProviderState, setAiProviderState] = useState('gemini');
   const [showSettings, setShowSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -355,6 +357,10 @@ export default function App() {
     if (key) { setGeminiApiKey(key); setApiKeyInput(key); }
     const antKey = await Storage.get('anthropicKey');
     if (antKey) { setAnthropicApiKey(antKey); setAnthropicKeyInput(antKey); }
+    const oUrl = await Storage.get('ollamaUrl');
+    if (oUrl) { setOllamaUrl(oUrl); setOllamaUrlInput(oUrl); }
+    const oModel = await Storage.get('ollamaModel');
+    if (oModel) { setOllamaModel(oModel); setOllamaModelInput(oModel); }
     const provider = await Storage.get('aiProvider');
     if (provider) { setAiProvider(provider); setAiProviderState(provider); }
     const themeVal = await Storage.get('activeTheme');
@@ -1291,6 +1297,15 @@ export default function App() {
     await Storage.set('anthropicKey', key);
   }, []);
 
+  const saveOllamaSettings = useCallback(async (url, model) => {
+    setOllamaUrl(url);
+    setOllamaUrlInput(url);
+    setOllamaModel(model);
+    setOllamaModelInput(model);
+    await Storage.set('ollamaUrl', url);
+    await Storage.set('ollamaModel', model);
+  }, []);
+
   const changeProvider = useCallback(async (prov) => {
     setAiProvider(prov);
     setAiProviderState(prov);
@@ -1512,6 +1527,7 @@ export default function App() {
             <select className="input" value={aiProviderState} onChange={e => changeProvider(e.target.value)} style={{ padding: '10px' }}>
               <option value="gemini">Google Gemini (Flash)</option>
               <option value="anthropic">Anthropic (Claude 3 Haiku)</option>
+              <option value="ollama">Local AI (Ollama)</option>
             </select>
           </div>
 
@@ -1546,6 +1562,31 @@ export default function App() {
                 saveAnthropicKey(anthropicKeyInput);
                 alert('Anthropic API Key Saved (local storage)');
               }}>Save Anthropic Key</button>
+            </div>
+          )}
+
+          {aiProviderState === 'ollama' && (
+            <div className="form-group" style={{ marginTop: '10px' }}>
+              <label style={{ fontSize: '13px', color: 'var(--text2)', marginBottom: '8px', display: 'block' }}>Ollama Base URL</label>
+              <input 
+                className="input" 
+                type="text" 
+                placeholder="http://localhost:11434"
+                value={ollamaUrlInput}
+                onChange={e => setOllamaUrlInput(e.target.value)}
+              />
+              <label style={{ fontSize: '13px', color: 'var(--text2)', marginTop: '8px', marginBottom: '8px', display: 'block' }}>Ollama Model Name</label>
+              <input 
+                className="input" 
+                type="text" 
+                placeholder="llama3"
+                value={ollamaModelInput}
+                onChange={e => setOllamaModelInput(e.target.value)}
+              />
+              <button className="btn btn-primary w-full justify-center" style={{ marginTop: '12px' }} onClick={() => {
+                saveOllamaSettings(ollamaUrlInput, ollamaModelInput);
+                alert('Ollama Settings Saved (local storage)');
+              }}>Save Ollama Settings</button>
             </div>
           )}
 
