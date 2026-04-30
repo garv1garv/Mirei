@@ -2701,16 +2701,48 @@ const sanitizeAIText = (text) => {
 const renderMarkdown = (text) => {
   if (!text) return null;
   const cleaned = sanitizeAIText(text);
-  return cleaned.split('\n').map((line, i) => {
-    let html = line
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`([^`]+)`/g, '<code class="inline-code" style="background:var(--bg); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em; border:1px solid var(--border)">$1</code>')
-      .replace(/^### (.+)/, '<span class="msg-h3" style="font-weight:700; color:var(--text); margin-top:8px; display:block;">$1</span>')
-      .replace(/^## (.+)/, '<span class="msg-h2" style="font-size:1.1em; font-weight:800; color:var(--accent); margin-top:12px; display:block;">$1</span>')
-      .replace(/^# (.+)/, '<span class="msg-h1" style="font-size:1.2em; font-weight:800; color:var(--accent); margin-top:16px; display:block;">$1</span>')
-      .replace(/^\d+\.\s+(.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$&</span>')
-      .replace(/^[•\-\*] (.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$1</span>');
-    return <p key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} style={{ margin: html ? '4px 0' : '0' }} />;
+  
+  const blocks = [];
+  let inCodeBlock = false;
+  let currentCode = [];
+  let language = '';
+
+  cleaned.split('\n').forEach(line => {
+    if (line.trim().startsWith('```')) {
+      if (inCodeBlock) {
+        blocks.push({ type: 'code', content: currentCode.join('\n'), language });
+        inCodeBlock = false;
+        currentCode = [];
+      } else {
+        inCodeBlock = true;
+        language = line.trim().slice(3).trim();
+      }
+    } else if (inCodeBlock) {
+      currentCode.push(line);
+    } else {
+      blocks.push({ type: 'text', content: line });
+    }
+  });
+
+  return blocks.map((block, i) => {
+    if (block.type === 'code') {
+      return (
+        <div key={i} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: 16, margin: '16px 0', overflowX: 'auto', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text)' }}>
+          {block.language && <div style={{ fontSize: 11, color: 'var(--text2)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 'bold' }}>{block.language}</div>}
+          <pre style={{ margin: 0 }}><code>{block.content}</code></pre>
+        </div>
+      );
+    } else {
+      let html = block.content
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code class="inline-code" style="background:var(--bg); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em; border:1px solid var(--border)">$1</code>')
+        .replace(/^### (.+)/, '<span class="msg-h3" style="font-weight:700; color:var(--text); margin-top:16px; display:block;">$1</span>')
+        .replace(/^## (.+)/, '<span class="msg-h2" style="font-size:1.1em; font-weight:800; color:var(--accent); margin-top:20px; display:block;">$1</span>')
+        .replace(/^# (.+)/, '<span class="msg-h1" style="font-size:1.2em; font-weight:800; color:var(--accent); margin-top:24px; display:block;">$1</span>')
+        .replace(/^\d+\.\s+(.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$&</span>')
+        .replace(/^[•\-\*] (.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$1</span>');
+      return <p key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} style={{ margin: html ? '4px 0' : '0' }} />;
+    }
   });
 };
 
@@ -3233,13 +3265,15 @@ function InterviewSubjects({ openAITutor }) {
   }, [activeSubjectId, activeSubject.notesUrl]);
 
   const updateSubject = (id, updates) => {
-    const updated = subjects.map(s => s.id === id ? { ...s, ...updates } : s);
-    setSubjects(updated);
-    localStorage.setItem('mirei_subjects', JSON.stringify(updated.map(s => ({ 
-      id: s.id, 
-      notesUrl: s.notesUrl,
-      detailedNotes: s.detailedNotes !== SUBJECTS.find(orig => orig.id === s.id).detailedNotes ? s.detailedNotes : undefined
-    }))));
+    setSubjects(prevSubjects => {
+      const updated = prevSubjects.map(s => s.id === id ? { ...s, ...updates } : s);
+      localStorage.setItem('mirei_subjects', JSON.stringify(updated.map(s => ({ 
+        id: s.id, 
+        notesUrl: s.notesUrl,
+        detailedNotes: s.detailedNotes !== SUBJECTS.find(orig => orig.id === s.id).detailedNotes ? s.detailedNotes : undefined
+      }))));
+      return updated;
+    });
   };
 
   const saveUrl = () => {
