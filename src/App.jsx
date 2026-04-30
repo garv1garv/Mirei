@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import './index.css'
 import QUESTIONS, { TOPICS, COMPANIES, DIFFICULTY_COLORS } from './data/questions'
 import CHAPTERS from './data/chapters'
+import { SUBJECTS } from './data/subjects'
 import Storage from './utils/storage'
 import { callAi as callGemini, callAiWithHistory as callGeminiWithHistory, setGeminiApiKey, setAnthropicApiKey, setAiProvider, setOllamaUrl, setOllamaModel } from './utils/ai'
 import { runCode, loadPyodideRuntime, LANGUAGES } from './utils/codeRunner'
@@ -1329,6 +1330,13 @@ export default function App() {
     }, 38000); // Exit
   };
 
+  const [initialTutorPrompt, setInitialTutorPrompt] = useState(null);
+
+  const openAITutor = useCallback((prompt) => {
+    setInitialTutorPrompt(prompt);
+    setView('tutor');
+  }, []);
+
   const openQuestion = useCallback((id) => {
     setSelectedQuestion(id);
     setView('practice');
@@ -1344,6 +1352,7 @@ export default function App() {
   const navItems = [
     { id: 'dashboard', icon: Icons.grid, label: 'Dashboard' },
     { id: 'learn', icon: Icons.book, label: 'Learn' },
+    { id: 'subjects', icon: Icons.bookmark, label: 'Core Subjects' },
     { id: 'practice', icon: Icons.code, label: 'Practice' },
     { id: 'company', icon: Icons.building, label: 'Company Prep' },
     { id: 'planner', icon: Icons.calendar, label: 'Prep Planner' },
@@ -1445,7 +1454,8 @@ export default function App() {
             {view === 'cheatsheet' && <Cheatsheet />}
             {view === 'patterns' && <PatternFinder />}
             {view === 'skillbuilder' && <SkillBuilder />}
-            {view === 'tutor' && <AITutor />}
+            {view === 'subjects' && <InterviewSubjects openAITutor={openAITutor} />}
+            {view === 'tutor' && <AITutor initialPrompt={initialTutorPrompt} clearInitialPrompt={() => setInitialTutorPrompt(null)} />}
           </main>
         </div>
       </div>
@@ -3186,9 +3196,245 @@ function SkillBuilder() {
   );
 }
 // ═══════════════════════════════════════
+// INTERVIEW SUBJECTS VIEW
+// ═══════════════════════════════════════
+function InterviewSubjects({ openAITutor }) {
+  const [subjects, setSubjects] = useState(() => {
+    const saved = localStorage.getItem('mirei_subjects');
+    // Merge saved custom URLs with our hardcoded SUBJECTS data
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return SUBJECTS.map(s => {
+          const savedData = parsed.find(p => p.id === s.id);
+          return savedData ? { ...s, notesUrl: savedData.notesUrl } : s;
+        });
+      } catch (e) {
+        return SUBJECTS;
+      }
+    }
+    return SUBJECTS;
+  });
+  
+  const [activeSubjectId, setActiveSubjectId] = useState(subjects[0].id);
+  const activeSubject = subjects.find(s => s.id === activeSubjectId) || subjects[0];
+  
+  const [activeTab, setActiveTab] = useState('notes'); // 'notes' | 'practice' | 'external'
+  const [editUrl, setEditUrl] = useState(false);
+  const [tempUrl, setTempUrl] = useState(activeSubject.notesUrl);
+  const [revealedAnswers, setRevealedAnswers] = useState({});
+
+  useEffect(() => {
+    setTempUrl(activeSubject.notesUrl);
+    setEditUrl(false);
+    setRevealedAnswers({});
+    setActiveTab('notes');
+  }, [activeSubjectId, activeSubject.notesUrl]);
+
+  const saveUrl = () => {
+    const updated = subjects.map(s => s.id === activeSubjectId ? { ...s, notesUrl: tempUrl } : s);
+    setSubjects(updated);
+    localStorage.setItem('mirei_subjects', JSON.stringify(updated.map(s => ({ id: s.id, notesUrl: s.notesUrl }))));
+    setEditUrl(false);
+  };
+
+  const toggleAnswer = (idx) => {
+    setRevealedAnswers(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  return (
+    <div className="fade-in split-panel" style={{ margin: '-24px', height: 'calc(100vh - var(--topbar-height))', display: 'flex' }}>
+      <div className="split-left" style={{ width: '30%', background: 'var(--bg2)', padding: '32px 24px', borderRight: '1px solid var(--border)', overflowY: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, var(--accent), var(--accent2))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, boxShadow: '0 8px 16px rgba(108,140,255,0.2)' }}>
+            📚
+          </div>
+          <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800 }}>Core Subjects</h2>
+        </div>
+        <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 32, lineHeight: 1.6 }}>
+          Master computer science fundamentals. Read detailed notes, practice frequently asked questions, and use AI to quiz your knowledge.
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {subjects.map(sub => (
+            <div 
+              key={sub.id} 
+              className={`card ${activeSubjectId === sub.id ? 'active' : ''}`}
+              style={{ 
+                cursor: 'pointer', padding: '16px', 
+                borderColor: activeSubjectId === sub.id ? 'var(--accent)' : 'var(--border)',
+                background: activeSubjectId === sub.id ? 'linear-gradient(135deg, rgba(108, 140, 255, 0.08), rgba(108, 140, 255, 0.02))' : 'var(--bg)',
+                transform: activeSubjectId === sub.id ? 'translateY(-2px)' : 'translateY(0)',
+                transition: 'all 0.3s ease',
+                boxShadow: activeSubjectId === sub.id ? '0 8px 24px rgba(0,0,0,0.1)' : 'none'
+              }}
+              onClick={() => setActiveSubjectId(sub.id)}
+            >
+              <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                <div style={{ fontSize: 28, background: 'var(--bg2)', padding: 8, borderRadius: 12, border: '1px solid var(--border)' }}>{sub.icon}</div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: 15, color: activeSubjectId === sub.id ? 'var(--accent)' : 'var(--text)' }}>{sub.title}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text2)', marginTop: 6, lineHeight: 1.4 }}>{sub.description}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="split-right" style={{ width: '70%', padding: 0, position: 'relative', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+        {/* Header Area */}
+        <div style={{ padding: '24px 32px 0 32px', borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+            <div>
+              <h3 style={{ margin: 0, fontSize: 28, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 12 }}>
+                {activeSubject.icon} {activeSubject.title}
+              </h3>
+              <div style={{ fontSize: 14, color: 'var(--text2)', marginTop: 8 }}>Select a tab to view notes, questions, or external resources.</div>
+            </div>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => openAITutor(activeSubject.aiPrompt)}
+              title="Use AI Tutor for this subject"
+              style={{ padding: '12px 20px', background: 'linear-gradient(135deg, var(--accent), var(--accent2))', color: '#fff', fontWeight: 'bold', borderRadius: '100px', boxShadow: '0 4px 12px rgba(108, 140, 255, 0.3)' }}
+            >
+              ✨ AI Quiz Mode
+            </button>
+          </div>
+          
+          {/* Custom Tabs UI */}
+          <div style={{ display: 'flex', gap: 32, borderBottom: '2px solid transparent' }}>
+            <button 
+              onClick={() => setActiveTab('notes')}
+              style={{ 
+                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'notes' ? 700 : 500,
+                color: activeTab === 'notes' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
+                borderBottom: activeTab === 'notes' ? '3px solid var(--accent)' : '3px solid transparent',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+              }}>
+              📖 Detailed Notes
+            </button>
+            <button 
+              onClick={() => setActiveTab('practice')}
+              style={{ 
+                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'practice' ? 700 : 500,
+                color: activeTab === 'practice' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
+                borderBottom: activeTab === 'practice' ? '3px solid var(--accent)' : '3px solid transparent',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+              }}>
+              📝 Practice Questions
+            </button>
+            <button 
+              onClick={() => setActiveTab('external')}
+              style={{ 
+                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'external' ? 700 : 500,
+                color: activeTab === 'external' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
+                borderBottom: activeTab === 'external' ? '3px solid var(--accent)' : '3px solid transparent',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+              }}>
+              🔗 External Link
+            </button>
+          </div>
+        </div>
+        
+        {/* Content Container */}
+        <div style={{ flex: 1, position: 'relative', overflowY: 'auto', padding: activeTab === 'external' ? 0 : 32 }}>
+          
+          {/* TAB: Detailed Notes */}
+          {activeTab === 'notes' && (
+            <div className="fade-in" style={{ maxWidth: 800, margin: '0 auto', fontSize: 15, lineHeight: 1.8, color: 'var(--text2)' }}>
+              <div className="card" style={{ padding: 40, background: 'var(--bg2)', border: '1px solid var(--border)' }}>
+                {renderMarkdown(activeSubject.detailedNotes)}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: Practice Questions */}
+          {activeTab === 'practice' && (
+            <div className="fade-in" style={{ maxWidth: 800, margin: '0 auto' }}>
+              <h3 style={{ marginBottom: 24, fontSize: 20 }}>Top Interview Questions</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {activeSubject.practiceQuestions.map((item, idx) => (
+                  <div key={idx} className="card" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border)' }}>
+                    <div 
+                      onClick={() => toggleAnswer(idx)}
+                      style={{ padding: '20px 24px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: revealedAnswers[idx] ? 'var(--bg2)' : 'var(--bg)' }}
+                    >
+                      <div style={{ fontWeight: 600, fontSize: 15, display: 'flex', gap: 16, alignItems: 'center' }}>
+                        <span style={{ color: 'var(--accent)', background: 'rgba(108,140,255,0.1)', padding: '4px 12px', borderRadius: 100, fontSize: 12 }}>Q{idx + 1}</span>
+                        {item.q}
+                      </div>
+                      <div style={{ fontSize: 20, color: 'var(--text2)', transform: revealedAnswers[idx] ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }}>
+                        ▼
+                      </div>
+                    </div>
+                    {revealedAnswers[idx] && (
+                      <div style={{ padding: '24px', borderTop: '1px dashed var(--border)', background: 'var(--bg2)', fontSize: 15, lineHeight: 1.7, color: 'var(--text2)' }}>
+                        <div style={{ fontWeight: 700, color: '#00b894', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span>✓</span> Answer
+                        </div>
+                        {renderMarkdown(item.a)}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: External Link (Iframe) */}
+          {activeTab === 'external' && (
+            <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ padding: '16px 32px', borderBottom: '1px solid var(--border)', background: 'var(--bg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                {editUrl ? (
+                  <div style={{ display: 'flex', gap: 8, flex: 1, marginRight: 24 }}>
+                    <input 
+                      type="text" 
+                      value={tempUrl} 
+                      onChange={e => setTempUrl(e.target.value)} 
+                      className="input" 
+                      style={{ flex: 1 }} 
+                      placeholder="https://your-notion-page-or-docs-url..."
+                    />
+                    <button className="btn btn-primary" onClick={saveUrl}>Save</button>
+                    <button className="btn btn-secondary" onClick={() => { setTempUrl(activeSubject.notesUrl); setEditUrl(false); }}>Cancel</button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
+                    <span style={{ fontSize: 14, color: 'var(--text2)' }}>External Source:</span>
+                    <a href={activeSubject.notesUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 400 }}>{activeSubject.notesUrl || 'Not set'}</a>
+                    <button className="btn btn-secondary btn-small" onClick={() => setEditUrl(true)}>✏️ Edit URL</button>
+                  </div>
+                )}
+              </div>
+              <div style={{ flex: 1, position: 'relative' }}>
+                {activeSubject.notesUrl ? (
+                  <iframe 
+                    src={activeSubject.notesUrl} 
+                    style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
+                    title={`${activeSubject.title} Notes`}
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                  />
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text2)', flexDirection: 'column', gap: 16 }}>
+                    <div style={{ fontSize: 48 }}>🔗</div>
+                    <p>No external URL set. Click the edit button above to embed your own Notion or Docs link.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════
 // AI TUTOR VIEW (Enhanced PromptInputBox-Inspired)
 // ═══════════════════════════════════════
-function AITutor() {
+function AITutor({ initialPrompt, clearInitialPrompt }) {
   const defaultMessages = [{ role: 'assistant', content: "Hello! I'm your DSA Tutor powered by Gemini. I can help you:\n\n• **Explain concepts** — arrays, trees, DP, graphs, and more\n• **Solve problems** step-by-step with hints first\n• **Debug your code** — paste your code and I'll find the bug\n• **Quiz you** on any topic to test your understanding\n• **Create study plans** tailored to your goals\n\nWhat would you like to work on?" }];
   const [messages, setMessages] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -3203,6 +3449,13 @@ function AITutor() {
   const recordTimerRef = useRef(null);
   const [attachedImage, setAttachedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  useEffect(() => {
+    if (initialPrompt) {
+      setInput(initialPrompt);
+      clearInitialPrompt();
+    }
+  }, [initialPrompt, clearInitialPrompt]);
 
   useEffect(() => {
     Storage.get('tutorMessages').then(saved => {
