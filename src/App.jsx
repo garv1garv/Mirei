@@ -3580,14 +3580,7 @@ ${mode === 'canvas' ? 'The user is in canvas/whiteboard mode. Help them visualiz
     { label: 'Debug my code', icon: '🐛', prompt: "I'll paste my code next. Please review it for bugs, edge cases, and optimization opportunities." },
   ];
 
-  const quickActions = [
-    { label: 'Explain DP Patterns', icon: '🧠', prompt: 'Explain the main DP patterns I should know for interviews: linear, knapsack, LCS, LIS, interval, tree, bitmask DP. Give a one-line description and a classic problem for each.' },
-    { label: 'Quiz me: Trees', icon: '🌲', prompt: "Quiz me on binary tree concepts. Ask me 5 questions of increasing difficulty about tree traversals, BST properties, and classical tree problems." },
-    { label: 'Graph Help', icon: '🔗', prompt: "I'm struggling with graph problems. Walk me through BFS vs DFS, cycle detection, Dijkstra vs Bellman-Ford with examples." },
-    { label: '30-Day Plan', icon: '📅', prompt: 'Create a 30-day DSA study plan for FAANG interviews. I know basics but need to master advanced topics. Include daily topics, problem counts, and recommended LeetCode problems.' },
-    { label: 'Time Complexity', icon: '⏱', prompt: 'Teach me how to analyze time complexity like a pro. Cover recursion trees, Master theorem, amortized analysis, and common patterns.' },
-    { label: 'Debug my code', icon: '🐛', prompt: "I'll paste my code next. Please review it for bugs, edge cases, and optimization opportunities." },
-  ];
+
 
   return (
     <div className="tutor-container fade-in" style={{ position: 'relative' }}>
