@@ -44,9 +44,9 @@
   
   /* Layout */
   --sidebar-width: 260px;
-  --topbar-height: 60px;
-  --radius: 10px;
-  --radius-lg: 14px;
+  --topbar-height: 64px;
+  --radius: 12px;
+  --radius-lg: 18px;
   --transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   --glass-blur: blur(28px);
   

@@ -40,7 +40,7 @@ const Icons = {
   search: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
   brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 01-2 2h-4a2 2 0 01-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z"/><path d="M9 21h6"/><path d="M10 17v4M14 17v4"/></svg>,
   fire: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2c.5 2 2 4 2 6a4 4 0 01-8 0c0-2 1.5-4 2-6 .5 2 2 4 4 4s3.5-2 4-4z"/></svg>,
-  settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9c.2.65.76 1.1 1.44 1.1H21a2 2 0 010 4h-.09c-.68 0-1.24.45-1.44 1.1z"/></svg>,
+  settings: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9c.2.65.76 1.1 1.44 1.1H21a2 2 0 010 4h-.09c-.68 0-1.24.45-1.44 1.1z"/></svg>,
   bookmark: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>,
   bookmarkFilled: <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>,
   check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>,
@@ -289,6 +289,7 @@ const DAILY_QUOTES = [
 ];
 
 const THEMES = [
+  { id: 'modern-dark', name: 'Modern Dark', vars: { '--bg': '#09090b', '--bg2': '#18181b', '--bg3': '#27272a', '--accent': '#6366f1', '--accent2': '#8b5cf6', '--green': '#10b981', '--yellow': '#eab308', '--red': '#ef4444', '--text': '#f8fafc', '--text2': '#94a3b8', '--border': 'rgba(255,255,255,0.08)', '--shadow-hover': '0 8px 32px rgba(99,102,241,0.2)' } },
   { id: 'enchanted', name: 'Enchanted Dream', vars: { '--bg': 'rgba(26,16,28,0.65)', '--bg2': 'rgba(38,22,43,0.55)', '--bg3': 'rgba(56,32,60,0.75)', '--accent': '#ff85a1', '--accent2': '#ffb5a7', '--green': '#4ade80', '--yellow': '#fcd34d', '--red': '#fb7185', '--text': '#fdf2f8', '--text2': '#fbcfe8', '--border': 'rgba(255,133,161,0.25)', '--shadow-hover': '0 12px 36px rgba(255,133,161,0.35)' } },
   { id: 'leetcode', name: 'LeetCode Classic', vars: { '--bg': 'rgba(26,26,26,0.75)', '--bg2': 'rgba(40,40,40,0.65)', '--bg3': 'rgba(51,51,51,0.75)', '--accent': '#ffa116', '--accent2': '#ffb240', '--green': '#00b8a3', '--yellow': '#ffc01e', '--red': '#ff375f', '--text': '#eff2f6', '--text2': '#8a8a8a', '--border': 'rgba(62,62,62,0.6)', '--shadow-hover': '0 8px 24px rgba(255,161,22,0.15)' } },
   { id: 'obsidian', name: 'Obsidian Prism', vars: { '--bg': 'rgba(10,10,12,0.85)', '--bg2': 'rgba(20,20,24,0.7)', '--bg3': 'rgba(30,30,35,0.8)', '--accent': '#a855f7', '--accent2': '#d946ef', '--green': '#10b981', '--yellow': '#fbbf24', '--red': '#ef4444', '--text': '#f8fafc', '--text2': '#94a3b8', '--border': 'rgba(168,85,247,0.3)', '--shadow-hover': '0 10px 40px rgba(168,85,247,0.25)' } },
@@ -336,7 +337,7 @@ export default function App() {
   const [cinematicPhase, setCinematicPhase] = useState(0); // 0: off, 1: terminal, 2: video, 3: exit
   const [isChhavisVersion, setIsChhavisVersion] = useState(false);
   const [rainHearts, setRainHearts] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('obsidian');
+  const [activeTheme, setActiveTheme] = useState('modern-dark');
 
   // Multi-user Data Loader
   const loadUserData = useCallback(async (email) => {
@@ -368,7 +369,7 @@ export default function App() {
       setActiveTheme(themeVal);
     } else {
       // Darker default for regular users, warm pink for Chhavi
-      setActiveTheme(email === 'chhavi' ? 'enchanted' : 'obsidian');
+      setActiveTheme(email === 'chhavi' ? 'enchanted' : 'modern-dark');
     }
     const cv = await Storage.get('chhavisVersion');
     if (cv === true || email === 'chhavi') {
