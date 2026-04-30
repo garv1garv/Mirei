@@ -3315,7 +3315,7 @@ Format the entire response in clean Markdown. Use headings, bullet points, and c
           <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, var(--accent), var(--accent2))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, boxShadow: '0 8px 16px rgba(108,140,255,0.2)' }}>
             📚
           </div>
-          <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800 }}>Core Subjects</h2>
+          <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, background: 'linear-gradient(90deg, var(--text), var(--text2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Core Subjects</h2>
         </div>
         <p style={{ color: 'var(--text2)', fontSize: 13, marginBottom: 32, lineHeight: 1.6 }}>
           Master computer science fundamentals. Read detailed notes, practice frequently asked questions, and use AI to quiz your knowledge.
@@ -3353,8 +3353,8 @@ Format the entire response in clean Markdown. Use headings, bullet points, and c
         <div style={{ padding: '24px 32px 0 32px', borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
             <div>
-              <h3 style={{ margin: 0, fontSize: 28, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 12 }}>
-                {activeSubject.icon} {activeSubject.title}
+              <h3 style={{ margin: 0, fontSize: 32, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 12, background: 'linear-gradient(135deg, var(--accent), var(--accent2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <span style={{ WebkitTextFillColor: 'initial' }}>{activeSubject.icon}</span> {activeSubject.title}
               </h3>
               <div style={{ fontSize: 14, color: 'var(--text2)', marginTop: 8 }}>Select a tab to view notes, questions, or external resources.</div>
             </div>
@@ -3369,34 +3369,37 @@ Format the entire response in clean Markdown. Use headings, bullet points, and c
           </div>
           
           {/* Custom Tabs UI */}
-          <div style={{ display: 'flex', gap: 32, borderBottom: '2px solid transparent' }}>
+          <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.2)', padding: 6, borderRadius: 12, marginBottom: 24, gap: 8, border: '1px solid var(--border)' }}>
             <button 
               onClick={() => setActiveTab('notes')}
               style={{ 
-                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'notes' ? 700 : 500,
-                color: activeTab === 'notes' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
-                borderBottom: activeTab === 'notes' ? '3px solid var(--accent)' : '3px solid transparent',
-                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+                background: activeTab === 'notes' ? 'var(--accent)' : 'transparent',
+                border: 'none', borderRadius: 8, padding: '10px 20px', fontSize: 14, fontWeight: activeTab === 'notes' ? 700 : 500,
+                color: activeTab === 'notes' ? '#fff' : 'var(--text2)', cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'flex', alignItems: 'center', gap: 8, 
+                boxShadow: activeTab === 'notes' ? '0 4px 12px rgba(108,140,255,0.3)' : 'none'
               }}>
               📖 Detailed Notes
             </button>
             <button 
               onClick={() => setActiveTab('practice')}
               style={{ 
-                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'practice' ? 700 : 500,
-                color: activeTab === 'practice' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
-                borderBottom: activeTab === 'practice' ? '3px solid var(--accent)' : '3px solid transparent',
-                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+                background: activeTab === 'practice' ? 'var(--accent)' : 'transparent',
+                border: 'none', borderRadius: 8, padding: '10px 20px', fontSize: 14, fontWeight: activeTab === 'practice' ? 700 : 500,
+                color: activeTab === 'practice' ? '#fff' : 'var(--text2)', cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'flex', alignItems: 'center', gap: 8, 
+                boxShadow: activeTab === 'practice' ? '0 4px 12px rgba(108,140,255,0.3)' : 'none'
               }}>
               📝 Practice Questions
             </button>
             <button 
               onClick={() => setActiveTab('external')}
               style={{ 
-                background: 'none', border: 'none', padding: '0 0 16px 0', fontSize: 15, fontWeight: activeTab === 'external' ? 700 : 500,
-                color: activeTab === 'external' ? 'var(--text)' : 'var(--text2)', cursor: 'pointer',
-                borderBottom: activeTab === 'external' ? '3px solid var(--accent)' : '3px solid transparent',
-                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8
+                background: activeTab === 'external' ? 'var(--accent)' : 'transparent',
+                border: 'none', borderRadius: 8, padding: '10px 20px', fontSize: 14, fontWeight: activeTab === 'external' ? 700 : 500,
+                color: activeTab === 'external' ? '#fff' : 'var(--text2)', cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'flex', alignItems: 'center', gap: 8, 
+                boxShadow: activeTab === 'external' ? '0 4px 12px rgba(108,140,255,0.3)' : 'none'
               }}>
               🔗 External Link
             </button>
@@ -3447,27 +3450,28 @@ Format the entire response in clean Markdown. Use headings, bullet points, and c
               <h3 style={{ marginBottom: 24, fontSize: 20 }}>Top Interview Questions</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {activeSubject.practiceQuestions.map((item, idx) => (
-                  <div key={idx} className="card" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border)' }}>
+                  <div key={idx} className="card" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border)', borderLeft: revealedAnswers[idx] ? '4px solid var(--accent)' : '1px solid var(--border)', transition: 'all 0.3s ease' }}>
                     <div 
                       onClick={() => toggleAnswer(idx)}
-                      style={{ padding: '20px 24px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: revealedAnswers[idx] ? 'var(--bg2)' : 'var(--bg)' }}
+                      style={{ padding: '20px 24px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: revealedAnswers[idx] ? 'rgba(108,140,255,0.05)' : 'var(--bg)', transition: 'background 0.3s ease' }}
                     >
                       <div style={{ fontWeight: 600, fontSize: 15, display: 'flex', gap: 16, alignItems: 'center' }}>
-                        <span style={{ color: 'var(--accent)', background: 'rgba(108,140,255,0.1)', padding: '4px 12px', borderRadius: 100, fontSize: 12 }}>Q{idx + 1}</span>
+                        <span style={{ color: revealedAnswers[idx] ? '#fff' : 'var(--accent)', background: revealedAnswers[idx] ? 'var(--accent)' : 'rgba(108,140,255,0.1)', padding: '4px 12px', borderRadius: 100, fontSize: 12, transition: 'all 0.3s' }}>Q{idx + 1}</span>
                         {item.q}
                       </div>
-                      <div style={{ fontSize: 20, color: 'var(--text2)', transform: revealedAnswers[idx] ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }}>
+                      <div style={{ fontSize: 20, color: revealedAnswers[idx] ? 'var(--accent)' : 'var(--text2)', transform: revealedAnswers[idx] ? 'rotate(180deg)' : 'none', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                         ▼
                       </div>
                     </div>
-                    {revealedAnswers[idx] && (
-                      <div style={{ padding: '24px', borderTop: '1px dashed var(--border)', background: 'var(--bg2)', fontSize: 15, lineHeight: 1.7, color: 'var(--text2)' }}>
+                    <div style={{ maxHeight: revealedAnswers[idx] ? 1000 : 0, overflow: 'hidden', transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+                      <div style={{ padding: '0 24px 24px 24px', background: 'rgba(108,140,255,0.02)', fontSize: 15, lineHeight: 1.7, color: 'var(--text2)' }}>
+                        <div style={{ height: '1px', background: 'var(--border)', margin: '0 0 20px 0' }} />
                         <div style={{ fontWeight: 700, color: '#00b894', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span>✓</span> Answer
+                          <span>✓</span> Verified Answer
                         </div>
                         {renderMarkdown(item.a)}
                       </div>
-                    )}
+                    </div>
                   </div>
                 ))}
               </div>
