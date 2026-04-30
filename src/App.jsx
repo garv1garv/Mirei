@@ -2666,6 +2666,45 @@ function CompanyPrep({ openQuestion }) {
 }
 
 // ═══════════════════════════════════════
+// SHARED AI FORMATTING
+// ═══════════════════════════════════════
+const sanitizeAIText = (text) => {
+  if (!text) return text;
+  return text
+    .replace(/\$\\rightarrow\$/g, '→').replace(/\$\\leftarrow\$/g, '←').replace(/\$\\times\$/g, '×').replace(/\$\\div\$/g, '÷')
+    .replace(/\$\\leq\$/g, '≤').replace(/\$\\geq\$/g, '≥').replace(/\$\\neq\$/g, '≠').replace(/\$\\approx\$/g, '≈')
+    .replace(/\$\\infty\$/g, '∞').replace(/\$\\sum\$/g, 'Σ').replace(/\$\\pi\$/g, 'π').replace(/\$\\theta\$/g, 'θ')
+    .replace(/\$\\alpha\$/g, 'α').replace(/\$\\beta\$/g, 'β').replace(/\$\\log\$/g, 'log')
+    .replace(/\\rightarrow/g, '→').replace(/\\leftarrow/g, '←').replace(/\\times/g, '×').replace(/\\div/g, '÷')
+    .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥').replace(/\\neq/g, '≠').replace(/\\approx/g, '≈')
+    .replace(/\\infty/g, '∞').replace(/\\sum/g, 'Σ').replace(/\\pi/g, 'π').replace(/\\theta/g, 'θ')
+    .replace(/\\n(?!ot)/g, '')
+    .replace(/\$([^$]+)\$/g, '$1')
+    .replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\mathbf\{([^}]*)\}/g, '$1').replace(/\\textbf\{([^}]*)\}/g, '$1')
+    .replace(/\\textit\{([^}]*)\}/g, '$1').replace(/\\mathrm\{([^}]*)\}/g, '$1').replace(/\\mathcal\{([^}]*)\}/g, '$1')
+    .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1/$2)').replace(/\\sqrt\{([^}]*)\}/g, '√($1)')
+    .replace(/\\cdot/g, '·').replace(/\\ldots/g, '...').replace(/\\dots/g, '...')
+    .replace(/\\(?=[a-zA-Z]+\b)/g, '')
+    .replace(/  +/g, ' ');
+};
+
+const renderMarkdown = (text) => {
+  if (!text) return null;
+  const cleaned = sanitizeAIText(text);
+  return cleaned.split('\n').map((line, i) => {
+    let html = line
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code class="inline-code" style="background:var(--bg); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em; border:1px solid var(--border)">$1</code>')
+      .replace(/^### (.+)/, '<span class="msg-h3" style="font-weight:700; color:var(--text); margin-top:8px; display:block;">$1</span>')
+      .replace(/^## (.+)/, '<span class="msg-h2" style="font-size:1.1em; font-weight:800; color:var(--accent); margin-top:12px; display:block;">$1</span>')
+      .replace(/^# (.+)/, '<span class="msg-h1" style="font-size:1.2em; font-weight:800; color:var(--accent); margin-top:16px; display:block;">$1</span>')
+      .replace(/^\d+\.\s+(.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$&</span>')
+      .replace(/^[•\-\*] (.+)/, '<span class="msg-bullet" style="display:list-item; margin-left:20px;">$1</span>');
+    return <p key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} style={{ margin: html ? '4px 0' : '0' }} />;
+  });
+};
+
+// ═══════════════════════════════════════
 // PREP PLANNER VIEW
 // ═══════════════════════════════════════
 function PrepPlanner() {
@@ -2715,6 +2754,16 @@ Format it nicely with headers and bullet points.`
     }
   ];
 
+  const exportPlan = () => {
+    const blob = new Blob([plan], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `DSA_Prep_Plan_${company}_${timeframe.replace(' ', '_')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="fade-in">
       <h2 style={{ marginBottom: 24 }}>📅 Prep Planner</h2>
@@ -2750,16 +2799,19 @@ Format it nicely with headers and bullet points.`
             </select>
           </div>
         </div>
-        <button className="btn btn-primary" onClick={generatePlan} disabled={loading}>
+        <button className="btn btn-primary" onClick={generatePlan} disabled={loading} style={{ marginTop: 16 }}>
           {loading ? '⏳ Generating...' : '🎯 Generate Plan'}
         </button>
       </div>
 
       {plan && (
         <div className="card" style={{ marginBottom: 24 }}>
-          <div className="card-title">📋 Your Custom Plan</div>
-          <div style={{ marginTop: 16, whiteSpace: 'pre-wrap', fontSize: 14, lineHeight: 1.8, color: 'var(--text2)' }}>
-            {plan}
+          <div className="card-header" style={{ borderBottom: '1px solid var(--border)', paddingBottom: 16, marginBottom: 16 }}>
+            <div className="card-title">📋 Your Custom Plan</div>
+            <button className="btn btn-secondary btn-small" onClick={exportPlan}>📥 Export</button>
+          </div>
+          <div style={{ fontSize: 14, lineHeight: 1.8, color: 'var(--text2)' }}>
+            {renderMarkdown(plan)}
           </div>
         </div>
       )}
@@ -3137,9 +3189,9 @@ function SkillBuilder() {
 // AI TUTOR VIEW (Enhanced PromptInputBox-Inspired)
 // ═══════════════════════════════════════
 function AITutor() {
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm your DSA Tutor powered by Gemini. I can help you:\n\n• **Explain concepts** — arrays, trees, DP, graphs, and more\n• **Solve problems** step-by-step with hints first\n• **Debug your code** — paste your code and I'll find the bug\n• **Quiz you** on any topic to test your understanding\n• **Create study plans** tailored to your goals\n\nWhat would you like to work on?" }
-  ]);
+  const defaultMessages = [{ role: 'assistant', content: "Hello! I'm your DSA Tutor powered by Gemini. I can help you:\n\n• **Explain concepts** — arrays, trees, DP, graphs, and more\n• **Solve problems** step-by-step with hints first\n• **Debug your code** — paste your code and I'll find the bug\n• **Quiz you** on any topic to test your understanding\n• **Create study plans** tailored to your goals\n\nWhat would you like to work on?" }];
+  const [messages, setMessages] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState(null); // null | 'search' | 'think' | 'canvas'
@@ -3151,6 +3203,30 @@ function AITutor() {
   const recordTimerRef = useRef(null);
   const [attachedImage, setAttachedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  useEffect(() => {
+    Storage.get('tutorMessages').then(saved => {
+      if (saved && saved.length > 0) {
+        setMessages(saved);
+      } else {
+        setMessages(defaultMessages);
+      }
+      setIsLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      Storage.set('tutorMessages', messages);
+    }
+  }, [messages, isLoaded]);
+
+  const clearHistory = () => {
+    if (window.confirm("Are you sure you want to clear your chat history?")) {
+      setMessages(defaultMessages);
+      Storage.set('tutorMessages', defaultMessages);
+    }
+  };
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   useEffect(() => scrollToBottom(), [messages]);
@@ -3251,80 +3327,24 @@ ${mode === 'canvas' ? 'The user is in canvas/whiteboard mode. Help them visualiz
     { label: 'Debug my code', icon: '🐛', prompt: "I'll paste my code next. Please review it for bugs, edge cases, and optimization opportunities." },
   ];
 
-  // Clean up LaTeX/special symbols from AI responses
-  const sanitizeAIText = (text) => {
-    if (!text) return text;
-    return text
-      // Remove LaTeX dollar-sign wrappers: $...$ → content inside
-      .replace(/\$\\rightarrow\$/g, '→')
-      .replace(/\$\\leftarrow\$/g, '←')
-      .replace(/\$\\times\$/g, '×')
-      .replace(/\$\\div\$/g, '÷')
-      .replace(/\$\\leq\$/g, '≤')
-      .replace(/\$\\geq\$/g, '≥')
-      .replace(/\$\\neq\$/g, '≠')
-      .replace(/\$\\approx\$/g, '≈')
-      .replace(/\$\\infty\$/g, '∞')
-      .replace(/\$\\sum\$/g, 'Σ')
-      .replace(/\$\\pi\$/g, 'π')
-      .replace(/\$\\theta\$/g, 'θ')
-      .replace(/\$\\alpha\$/g, 'α')
-      .replace(/\$\\beta\$/g, 'β')
-      .replace(/\$\\log\$/g, 'log')
-      // Remove standalone LaTeX commands (without dollar signs)
-      .replace(/\\rightarrow/g, '→')
-      .replace(/\\leftarrow/g, '←')
-      .replace(/\\times/g, '×')
-      .replace(/\\div/g, '÷')
-      .replace(/\\leq/g, '≤')
-      .replace(/\\geq/g, '≥')
-      .replace(/\\neq/g, '≠')
-      .replace(/\\approx/g, '≈')
-      .replace(/\\infty/g, '∞')
-      .replace(/\\sum/g, 'Σ')
-      .replace(/\\pi/g, 'π')
-      .replace(/\\theta/g, 'θ')
-      .replace(/\\n(?!ot)/g, '') // \n that aren't \not
-      // Unwrap remaining $...$ LaTeX expressions → just the inner text
-      .replace(/\$([^$]+)\$/g, '$1')
-      // Clean up leftover backslashes from LaTeX commands like \text{}, \mathbf{}
-      .replace(/\\text\{([^}]*)\}/g, '$1')
-      .replace(/\\mathbf\{([^}]*)\}/g, '$1')
-      .replace(/\\textbf\{([^}]*)\}/g, '$1')
-      .replace(/\\textit\{([^}]*)\}/g, '$1')
-      .replace(/\\mathrm\{([^}]*)\}/g, '$1')
-      .replace(/\\mathcal\{([^}]*)\}/g, '$1')
-      .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1/$2)')
-      .replace(/\\sqrt\{([^}]*)\}/g, '√($1)')
-      .replace(/\\cdot/g, '·')
-      .replace(/\\ldots/g, '...')
-      .replace(/\\dots/g, '...')
-      // Remove any remaining stray backslashes before common LaTeX commands
-      .replace(/\\(?=[a-zA-Z]+\b)/g, '')
-      // Clean up doubled-up spaces
-      .replace(/  +/g, ' ');
-  };
-
-  // Simple markdown-ish rendering
-  const renderContent = (text) => {
-    if (!text) return null;
-    const cleaned = sanitizeAIText(text);
-    return cleaned.split('\n').map((line, i) => {
-      // Code blocks aren't handled inline — just format bold/code
-      let html = line
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
-        .replace(/^### (.+)/, '<span class="msg-h3">$1</span>')
-        .replace(/^## (.+)/, '<span class="msg-h2">$1</span>')
-        .replace(/^# (.+)/, '<span class="msg-h1">$1</span>')
-        .replace(/^\d+\.\s+(.+)/, '<span class="msg-bullet">$&</span>')
-        .replace(/^[•\-\*] (.+)/, '<span class="msg-bullet">• $1</span>');
-      return <p key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
-    });
-  };
+  const quickActions = [
+    { label: 'Explain DP Patterns', icon: '🧠', prompt: 'Explain the main DP patterns I should know for interviews: linear, knapsack, LCS, LIS, interval, tree, bitmask DP. Give a one-line description and a classic problem for each.' },
+    { label: 'Quiz me: Trees', icon: '🌲', prompt: "Quiz me on binary tree concepts. Ask me 5 questions of increasing difficulty about tree traversals, BST properties, and classical tree problems." },
+    { label: 'Graph Help', icon: '🔗', prompt: "I'm struggling with graph problems. Walk me through BFS vs DFS, cycle detection, Dijkstra vs Bellman-Ford with examples." },
+    { label: '30-Day Plan', icon: '📅', prompt: 'Create a 30-day DSA study plan for FAANG interviews. I know basics but need to master advanced topics. Include daily topics, problem counts, and recommended LeetCode problems.' },
+    { label: 'Time Complexity', icon: '⏱', prompt: 'Teach me how to analyze time complexity like a pro. Cover recursion trees, Master theorem, amortized analysis, and common patterns.' },
+    { label: 'Debug my code', icon: '🐛', prompt: "I'll paste my code next. Please review it for bugs, edge cases, and optimization opportunities." },
+  ];
 
   return (
-    <div className="tutor-container fade-in">
+    <div className="tutor-container fade-in" style={{ position: 'relative' }}>
+      {/* Clear History Button */}
+      {messages.length > 1 && (
+        <button className="btn btn-secondary btn-small" onClick={clearHistory} style={{ position: 'absolute', top: 16, right: 16, zIndex: 10, background: 'var(--bg2)', backdropFilter: 'blur(10px)' }}>
+          🗑️ Clear History
+        </button>
+      )}
+
       {/* Messages Area */}
       <div className="tutor-messages">
         {messages.length === 1 && !loading && (
@@ -3363,7 +3383,7 @@ ${mode === 'canvas' ? 'The user is in canvas/whiteboard mode. Help them visualiz
                   <img src={msg.image} alt="Attached" />
                 </div>
               )}
-              <div className="tutor-msg-text">{renderContent(msg.content)}</div>
+              <div className="tutor-msg-text">{renderMarkdown(msg.content)}</div>
             </div>
           </div>
         ))}
