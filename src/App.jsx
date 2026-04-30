@@ -3207,7 +3207,7 @@ function InterviewSubjects({ openAITutor }) {
         const parsed = JSON.parse(saved);
         return SUBJECTS.map(s => {
           const savedData = parsed.find(p => p.id === s.id);
-          return savedData ? { ...s, notesUrl: savedData.notesUrl } : s;
+          return savedData ? { ...s, notesUrl: savedData.notesUrl, detailedNotes: savedData.detailedNotes || s.detailedNotes } : s;
         });
       } catch (e) {
         return SUBJECTS;
@@ -3223,6 +3223,7 @@ function InterviewSubjects({ openAITutor }) {
   const [editUrl, setEditUrl] = useState(false);
   const [tempUrl, setTempUrl] = useState(activeSubject.notesUrl);
   const [revealedAnswers, setRevealedAnswers] = useState({});
+  const [isGeneratingBook, setIsGeneratingBook] = useState(false);
 
   useEffect(() => {
     setTempUrl(activeSubject.notesUrl);
@@ -3231,11 +3232,42 @@ function InterviewSubjects({ openAITutor }) {
     setActiveTab('notes');
   }, [activeSubjectId, activeSubject.notesUrl]);
 
-  const saveUrl = () => {
-    const updated = subjects.map(s => s.id === activeSubjectId ? { ...s, notesUrl: tempUrl } : s);
+  const updateSubject = (id, updates) => {
+    const updated = subjects.map(s => s.id === id ? { ...s, ...updates } : s);
     setSubjects(updated);
-    localStorage.setItem('mirei_subjects', JSON.stringify(updated.map(s => ({ id: s.id, notesUrl: s.notesUrl }))));
+    localStorage.setItem('mirei_subjects', JSON.stringify(updated.map(s => ({ 
+      id: s.id, 
+      notesUrl: s.notesUrl,
+      detailedNotes: s.detailedNotes !== SUBJECTS.find(orig => orig.id === s.id).detailedNotes ? s.detailedNotes : undefined
+    }))));
+  };
+
+  const saveUrl = () => {
+    updateSubject(activeSubjectId, { notesUrl: tempUrl });
     setEditUrl(false);
+  };
+
+  const generateAIBook = async () => {
+    setIsGeneratingBook(true);
+    try {
+      const prompt = `Act as an expert FAANG Tech Interviewer and University CS Professor.
+Write a massive, comprehensive, "book-level" interview preparation guide for: ${activeSubject.title}.
+
+Your guide MUST include:
+1. Deep dives into all core concepts and foundational theory.
+2. Important algorithms, data structures, or system architectures related to this field.
+3. Common edge cases, performance characteristics, and trade-offs.
+4. Advanced, senior-level topics that separate okay candidates from great ones.
+
+Format the entire response in clean Markdown. Use headings, bullet points, and code snippets where appropriate. Be extremely detailed. Don't be brief. Write as much high-quality technical detail as possible.`;
+      
+      const response = await callGemini(prompt);
+      updateSubject(activeSubject.id, { detailedNotes: response });
+    } catch (e) {
+      alert("Failed to generate AI book: " + e.message);
+    } finally {
+      setIsGeneratingBook(false);
+    }
   };
 
   const toggleAnswer = (idx) => {
@@ -3343,8 +3375,34 @@ function InterviewSubjects({ openAITutor }) {
           {/* TAB: Detailed Notes */}
           {activeTab === 'notes' && (
             <div className="fade-in" style={{ maxWidth: 800, margin: '0 auto', fontSize: 15, lineHeight: 1.8, color: 'var(--text2)' }}>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <div style={{ fontSize: 13, color: 'var(--text2)' }}>
+                  {activeSubject.detailedNotes !== SUBJECTS.find(orig => orig.id === activeSubject.id).detailedNotes 
+                    ? "✨ AI Generated Comprehensive Book" 
+                    : "Default Quick Notes"}
+                </div>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={generateAIBook}
+                  disabled={isGeneratingBook}
+                  title="Use Gemini to generate a massive, book-level guide for this subject natively."
+                  style={{ background: 'var(--accent)', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, cursor: isGeneratingBook ? 'not-allowed' : 'pointer', display: 'flex', gap: 8, alignItems: 'center', opacity: isGeneratingBook ? 0.7 : 1 }}
+                >
+                  {isGeneratingBook ? '⏳ Writing Book...' : '📚 Auto-Generate Entire Book'}
+                </button>
+              </div>
+
               <div className="card" style={{ padding: 40, background: 'var(--bg2)', border: '1px solid var(--border)' }}>
-                {renderMarkdown(activeSubject.detailedNotes)}
+                {isGeneratingBook ? (
+                  <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--accent)' }}>
+                    <div style={{ fontSize: 64, marginBottom: 24, animation: 'pulse 1.5s infinite' }}>🧠</div>
+                    <h3 style={{ margin: 0, fontSize: 24 }}>Gemini is writing a comprehensive guide...</h3>
+                    <p style={{ color: 'var(--text2)', marginTop: 12, fontSize: 16 }}>This might take 10-20 seconds to fetch all the advanced details.</p>
+                  </div>
+                ) : (
+                  renderMarkdown(activeSubject.detailedNotes)
+                )}
               </div>
             </div>
           )}
