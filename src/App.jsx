@@ -464,21 +464,10 @@ export default function App() {
       },
       princess: () => {
         if (!isChhavi()) return;
-        triggerConfetti();
-        spawnFloatingText('👑 The Queen Has Arrived 👑', '#fbbf24');
-      },
-      aurora: () => {
-        if (!isChhavi()) return;
-        document.body.classList.add('aurora-effect');
-        setTimeout(() => document.body.classList.remove('aurora-effect'), 8000);
       },
       forever: () => {
         if (!isChhavi()) return;
         const notes = [
-          'You make my code compile on the first try 💝',
-          'My favorite bug is falling for you 🐛💕',
-          'You\'re the semicolon to my JavaScript ✨',
-          'console.log("I love you, Chhavi") 💖',
           'while(true) { love(chhavi); } 🔄💕',
         ];
         notes.forEach((note, i) => {
@@ -684,6 +673,10 @@ export default function App() {
       matcha: () => {
         if (!isChhavi()) return;
         triggerMatcha();
+      },
+      eyes: () => {
+        if (!isChhavi()) return;
+        triggerEyes();
       },
 
       hate: () => {
@@ -1234,10 +1227,10 @@ export default function App() {
     const overlay = document.createElement('div');
     overlay.className = 'diary-overlay';
     const entries = [
-      { date: 'Day 1', text: "I met someone today. She has the most beautiful smile I've ever seen." },
-      { date: 'Day 30', text: "I can't stop thinking about her. Her laugh makes my whole day." },
-      { date: 'Day 100', text: "I think I'm in love. Actually, I know I am." },
-      { date: 'Today', text: "I built her an entire world. And I'd build a thousand more." },
+      { date: 'The Beginning', text: "I saw a Reddit post about eyes. I didn't know then that they'd become my favorite sight in the world." },
+      { date: 'Getting Closer', text: "We started talking. Slowly, without even realizing it, I was falling for her." },
+      { date: 'The Realization', text: "I think I'm in love. Actually, I know I am." },
+      { date: 'Today', text: "I built her an entire world here. And I'd build a thousand more." },
     ];
     overlay.innerHTML = `
       <div class="diary-book">
@@ -1345,7 +1338,7 @@ export default function App() {
         <div style="width: 280px; height: 280px; background: #e2e8f0; border-radius: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative">
            <div style="font-size: 80px">👩‍❤️‍👨</div>
         </div>
-        <div style="font-family: 'Playfair Display', serif; font-size: 20px; color: #333; text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg)">Meeting You 💕</div>
+        <div style="font-family: 'Playfair Display', serif; font-size: 20px; color: #333; text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg)">Those Eyes 💕</div>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -1443,7 +1436,7 @@ export default function App() {
     Object.assign(paper.style, { width: '80%', maxWidth: '500px', fontFamily: '"Courier New", Courier, monospace', fontSize: '18px', color: '#333', lineHeight: '2', fontWeight: 'bold' });
     overlay.appendChild(paper);
     
-    const text = `Every great story needs a muse.\nMine just happens to have the most beautiful smile\nin the entire world.\n\n— To my favorite person.`;
+    const text = `It started with a Reddit post about eyes.\nI never knew looking into them would become my favorite thing.\nSlowly, quietly, I fell completely in love.\n\n— Yours.`;
     let i = 0;
     
     document.body.appendChild(overlay);
@@ -1481,6 +1474,29 @@ export default function App() {
     overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
     document.body.appendChild(overlay);
     setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
+  };
+
+  // 👀 Eyes (Reddit Origin)
+  const triggerEyes = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'radial-gradient(circle at center, rgba(15,23,42,0.8), rgba(0,0,0,0.95))', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 1.5s', opacity: '0' });
+    overlay.innerHTML = `
+      <div style="font-size: 80px; animation: gentlePulse 3s infinite">👀</div>
+      <div style="font-size: 24px; color: #fdf2f8; margin-top: 30px; font-weight: 500; text-align: center; max-width: 80%; line-height: 1.6; font-style: italic; text-shadow: 0 0 10px rgba(255,255,255,0.2)">
+        "I saw a post about eyes...<br/><br/>
+        <span style="font-size: 20px; color: #f472b6; transition: opacity 2s" id="eyes-text-2">And then I fell for the soul behind them."</span>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => overlay.style.opacity = '1', 50);
+    
+    const text2 = overlay.querySelector('#eyes-text-2');
+    text2.style.opacity = '0';
+    setTimeout(() => text2.style.opacity = '1', 3000);
+    
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1500); });
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1500); }, 10000);
   };
 
 
