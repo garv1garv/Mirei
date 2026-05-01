@@ -468,10 +468,19 @@ export default function App() {
       forever: () => {
         if (!isChhavi()) return;
         const notes = [
-          'while(true) { love(chhavi); } 🔄💕',
+          { type: 'text', content: 'It all started with a simple Reddit post 📱' },
+          { type: 'image', content: '/chhavi-eyes.jpg' },
+          { type: 'text', content: 'And then I saw those beautiful eyes 👀💕' },
+          { type: 'image', content: '/chhavi-face.jpg' },
+          { type: 'text', content: 'Slowly, quietly, I fell completely in love ✨' },
+          { type: 'text', content: 'From internet strangers to my forever ❤️' },
+          { type: 'text', content: 'while(true) { love(chhavi); } ♾️' },
         ];
         notes.forEach((note, i) => {
-          setTimeout(() => spawnLoveNote(note), i * 1200);
+          setTimeout(() => {
+            if (note.type === 'text') spawnLoveNote(note.content);
+            else spawnLoveImage(note.content);
+          }, i * 1500);
         });
       },
       heartbeat: () => {
@@ -757,6 +766,15 @@ export default function App() {
     el.className = 'love-note-float';
     el.textContent = text;
     el.style.left = 10 + Math.random() * 80 + '%';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
+  };
+
+  const spawnLoveImage = (src) => {
+    const el = document.createElement('div');
+    el.className = 'love-note-float';
+    Object.assign(el.style, { width: '150px', height: '150px', borderRadius: '12px', overflow: 'hidden', padding: '0', background: 'transparent', border: '2px solid rgba(255,255,255,0.5)', left: 10 + Math.random() * 80 + '%' });
+    el.innerHTML = `<img src="${src}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none';" />`;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 6000);
   };
@@ -1336,7 +1354,7 @@ export default function App() {
     overlay.innerHTML = `
       <div style="background: white; padding: 15px 15px 50px 15px; border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-5deg) scale(0); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: ambientFloat 4s infinite">
         <div style="width: 280px; height: 280px; background: #e2e8f0; border-radius: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative">
-           <div style="font-size: 80px">👩‍❤️‍👨</div>
+           <img src="/chhavi-face.jpg" alt="Those Eyes" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='👩‍❤️‍👨'; this.parentElement.style.fontSize='80px';" />
         </div>
         <div style="font-family: 'Playfair Display', serif; font-size: 20px; color: #333; text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg)">Those Eyes 💕</div>
       </div>
@@ -1481,7 +1499,9 @@ export default function App() {
     const overlay = document.createElement('div');
     Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'radial-gradient(circle at center, rgba(15,23,42,0.8), rgba(0,0,0,0.95))', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 1.5s', opacity: '0' });
     overlay.innerHTML = `
-      <div style="font-size: 80px; animation: gentlePulse 3s infinite">👀</div>
+      <div style="width: 200px; height: 120px; border-radius: 15px; overflow: hidden; box-shadow: 0 0 30px rgba(244, 114, 182, 0.4); animation: gentlePulse 3s infinite; margin-bottom: 20px;">
+        <img src="/chhavi-eyes.jpg" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='👀'; this.parentElement.style.fontSize='80px';" />
+      </div>
       <div style="font-size: 24px; color: #fdf2f8; margin-top: 30px; font-weight: 500; text-align: center; max-width: 80%; line-height: 1.6; font-style: italic; text-shadow: 0 0 10px rgba(255,255,255,0.2)">
         "I saw a post about eyes...<br/><br/>
         <span style="font-size: 20px; color: #f472b6; transition: opacity 2s" id="eyes-text-2">And then I fell for the soul behind them."</span>
