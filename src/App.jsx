@@ -472,7 +472,7 @@ export default function App() {
           { type: 'image', content: '/chhavi-eyes.jpg' },
           { type: 'text', content: 'And somehow led to the prettiest eyes 👀💕' },
           { type: 'image', content: '/chhavi-face.jpg' },
-          { type: 'text', content: 'I\\'m really glad we crossed paths ✨' },
+          { type: 'text', content: "I'm really glad we crossed paths ✨" },
           { type: 'text', content: 'From internet strangers to my favorite person ❤️' },
           { type: 'text', content: 'while(true) { smile(chhavi); } 😊' },
         ];
