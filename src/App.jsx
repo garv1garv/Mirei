@@ -1376,7 +1376,7 @@ export default function App() {
           fw.appendChild(spark);
           
           setTimeout(() => {
-            spark.style.transform = \`translate(\${Math.cos(angle)*dist}px, \${Math.sin(angle)*dist}px)\`;
+            spark.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`;
             spark.style.opacity = '0';
           }, 50);
         }
@@ -1407,13 +1407,13 @@ export default function App() {
         Object.assign(l.style, {
           position: 'absolute', left: (Math.random() * 100) + 'vw', bottom: '-50px',
           fontSize: (20 + Math.random() * 30) + 'px', filter: 'drop-shadow(0 0 15px #fde047)',
-          transition: \`all \${6 + Math.random()*5}s linear\`, opacity: 0.8 + Math.random()*0.2
+          transition: `all ${6 + Math.random()*5}s linear`, opacity: 0.8 + Math.random()*0.2
         });
         overlay.appendChild(l);
         
         setTimeout(() => {
           l.style.bottom = '120vh';
-          l.style.left = \`calc(\${l.style.left} + \${(Math.random() - 0.5) * 100}px)\`;
+          l.style.left = `calc(${l.style.left} + ${(Math.random() - 0.5) * 100}px)`;
         }, 50);
       }, i * 300);
     }
