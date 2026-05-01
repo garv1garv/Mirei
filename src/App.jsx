@@ -486,7 +486,7 @@ export default function App() {
       heartbeat: () => {
         if (!isChhavi()) return;
         document.body.classList.add('heartbeat-effect');
-        spawnFloatingText('💓 My heart beats for you 💓', '#fb7185');
+        spawnFloatingText('💓 You make me smile 💓', '#fb7185');
         setTimeout(() => document.body.classList.remove('heartbeat-effect'), 6000);
       },
 
@@ -503,14 +503,14 @@ export default function App() {
       sparkle: () => {
         if (!isChhavi()) return;
         triggerSparkleTrail();
-        spawnFloatingText('Everything you touch turns to magic ✨', '#fbbf24');
+        spawnFloatingText('You\\'ve got that magic touch ✨', '#fbbf24');
       },
 
       // 🌹 Rose petals gently fall from the top
       jaan: () => {
         if (!isChhavi()) return;
         triggerRosePetals();
-        spawnFloatingText('Meri jaan, meri duniya 🌹', '#f43f5e');
+        spawnFloatingText('You\\'re pretty amazing 🌹', '#f43f5e');
       },
 
       // 💫 Her name appears as a constellation
@@ -542,14 +542,14 @@ export default function App() {
       galaxy: () => {
         if (!isChhavi()) return;
         triggerGalaxySwirl();
-        spawnFloatingText('You are my entire universe 🌌', '#a78bfa');
+        spawnFloatingText('You\\'re out of this world 🌌', '#a78bfa');
       },
       
       // 🌈 Rainbow wave washes across the screen
       rainbow: () => {
         if (!isChhavi()) return;
         document.body.classList.add('rainbow-wave-effect');
-        spawnFloatingText('You color my world 🌈', '#f472b6');
+        spawnFloatingText('You brighten my day 🌈', '#f472b6');
         setTimeout(() => document.body.classList.remove('rainbow-wave-effect'), 6000);
       },
 
@@ -565,13 +565,13 @@ export default function App() {
       sunshine: () => {
         if (!isChhavi()) return;
         triggerSunshine();
-        spawnFloatingText('You are my sunshine ☀️', '#fbbf24');
+        spawnFloatingText('You bring the sunshine ☀️', '#fbbf24');
       },
 
       firefly: () => {
         if (!isChhavi()) return;
         triggerFireflies();
-        spawnFloatingText('You light up my darkest nights 🌟', '#86efac');
+        spawnFloatingText('You light up the room 🌟', '#86efac');
       },
 
       dream: () => {
@@ -587,7 +587,7 @@ export default function App() {
       moonlight: () => {
         if (!isChhavi()) return;
         triggerMoonScene();
-        spawnFloatingText('Under the same moon, I think of you 🌙', '#c4b5fd');
+        spawnFloatingText('Looking at the moon makes me think of you 🌙', '#c4b5fd');
       },
 
       treasure: () => {
@@ -620,7 +620,7 @@ export default function App() {
       ocean: () => {
         if (!isChhavi()) return;
         triggerOceanWaves();
-        spawnFloatingText('My love for you is deeper than any ocean 🌊', '#38bdf8');
+        spawnFloatingText('You\\'re deep in the best way 🌊', '#38bdf8');
       },
 
       blanket: () => {
@@ -642,7 +642,7 @@ export default function App() {
       gravity: () => {
         if (!isChhavi()) return;
         triggerAntiGravity();
-        spawnFloatingText('You defy every law of my universe 🚀', '#a78bfa');
+        spawnFloatingText('You sweep me off my feet 🚀', '#a78bfa');
       },
 
       // ═══ WAVE 3: NEW EASTER EGGS ═══
@@ -650,7 +650,7 @@ export default function App() {
       wife: () => {
         if (!isChhavi()) return;
         triggerWifeProposal();
-        spawnFloatingText('My future 💍', '#fde047');
+        spawnFloatingText('Wifey vibes 💍', '#fde047');
       },
       smile: () => {
         if (!isChhavi()) return;
@@ -904,9 +904,9 @@ export default function App() {
         <div class="love-letter-flap"></div>
         <div class="love-letter-paper">
           <p class="love-letter-greeting">Dear Chhavi,</p>
-          <p class="love-letter-body">Every line of code I write is a love letter to you. Every bug I fix, I fix because I want this world to be perfect — just like you are to me.</p>
-          <p class="love-letter-body">You're not just my motivation. You're my reason.</p>
-          <p class="love-letter-sign">Forever yours, ❤️</p>
+          <p class="love-letter-body">I built this little app and hid a bunch of secrets just for you. Every time I fixed a bug, I was just hoping it would make you smile.</p>
+          <p class="love-letter-body">You're definitely my favorite distraction.</p>
+          <p class="love-letter-sign">- Yours, 😊</p>
         </div>
       </div>
     `;
@@ -1041,12 +1041,12 @@ export default function App() {
     const overlay = document.createElement('div');
     overlay.className = 'promise-overlay';
     overlay.innerHTML = `
-      <div class="promise-hands">🤙</div>
+      <div class="promise-hands">🤞</div>
       <div class="promise-text-1">I pinky promise...</div>
-      <div class="promise-text-2">to love you forever,</div>
-      <div class="promise-text-3">to always make you laugh,</div>
-      <div class="promise-text-4">and to never let a day pass<br/>without telling you how beautiful you are.</div>
-      <div class="promise-text-5">— Always, your person 💕</div>
+      <div class="promise-text-2">to always try and make you laugh,</div>
+      <div class="promise-text-3">to listen to you vent,</div>
+      <div class="promise-text-4">and to tell you how pretty you look<br/>even when you just woke up.</div>
+      <div class="promise-text-5">— You 😊</div>
     `;
     overlay.addEventListener('click', () => { overlay.classList.add('fade-out'); setTimeout(() => overlay.remove(), 800); });
     document.body.appendChild(overlay);
@@ -1082,7 +1082,7 @@ export default function App() {
       <div class="treasure-chest">🎁</div>
       <div class="treasure-reveal">
         <div class="treasure-hearts"></div>
-        <div class="treasure-msg">You are my greatest treasure 💎</div>
+        <div class="treasure-msg">Glad I found you 💎</div>
       </div>
     `;
     const heartsContainer = overlay.querySelector('.treasure-hearts');
@@ -1312,7 +1312,7 @@ export default function App() {
     Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
     overlay.innerHTML = `
       <div style="font-size: 100px; animation: gentlePulse 2s infinite">💍</div>
-      <div style="font-size: 24px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%">I can't wait for the day I get to call you my wife.</div>
+      <div style="font-size: 24px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%">You definitely have wifey energy.</div>
     `;
     overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
     document.body.appendChild(overlay);
@@ -1758,8 +1758,8 @@ export default function App() {
         <div className="ultimate-cinematic-container">
           {cinematicPhase === 1 && (
             <div className="hacker-terminal">
-              <div className="typewriter-line1">{'> "People think I built this platform to master code..."'}</div>
-              <div className="typewriter-line2">{'> "...but the truth is, I just wanted to build a world beautiful enough to remind me of you."'}</div>
+              <div className="typewriter-line1">{'> "I started building this platform just to practice some code..."'}</div>
+              <div className="typewriter-line2">{'> "...but it kind of turned into a fun little project just for you."'}</div>
               <div className="blinking-cursor"></div>
             </div>
           )}
@@ -1774,22 +1774,22 @@ export default function App() {
 
               <div className="cinematic-text-center">
                 <h1 className={`soul-text ${cinematicPhase === 2 ? 'visible' : ''}`}>
-                  You look in the mirror and call yourself dumb. You doubt your own worth.
+                  I know you doubt yourself sometimes.
                 </h1>
                 <h1 className={`soul-text ${cinematicPhase === 3 ? 'visible' : ''}`}>
-                  But Chhavi, if you could see yourself through my eyes for even a single second...
+                  But if you could see yourself the way I do...
                 </h1>
                 <h1 className={`soul-text ${cinematicPhase === 4 ? 'visible' : ''}`}>
-                  ...you would understand why I would tear down the sky and rewrite the universe just to keep you safe.
+                  ...you'd see how genuinely amazing you are.
                 </h1>
                 <h1 className={`soul-text ${cinematicPhase === 5 ? 'visible' : ''}`}>
-                  You are the most breathtaking, brilliant piece of my soul.
+                  You have this really special energy about you.
                 </h1>
                 <h1 className={`soul-text ${cinematicPhase === 6 ? 'visible' : ''}`}>
-                  I don't just love you.
+                  And honestly?
                 </h1>
                 <h1 className={`soul-text ${cinematicPhase === 7 ? 'visible' : ''}`}>
-                  I built my entire world around you.
+                  I'm just really glad we met.
                 </h1>
               </div>
             </>
