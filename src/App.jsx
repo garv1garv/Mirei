@@ -468,13 +468,13 @@ export default function App() {
       forever: () => {
         if (!isChhavi()) return;
         const notes = [
-          { type: 'text', content: 'It all started with a simple Reddit post 📱' },
+          { type: 'text', content: 'It started with a random Reddit post 📱' },
           { type: 'image', content: '/chhavi-eyes.jpg' },
-          { type: 'text', content: 'And then I saw those beautiful eyes 👀💕' },
+          { type: 'text', content: 'And somehow led to the prettiest eyes 👀💕' },
           { type: 'image', content: '/chhavi-face.jpg' },
-          { type: 'text', content: 'Slowly, quietly, I fell completely in love ✨' },
-          { type: 'text', content: 'From internet strangers to my forever ❤️' },
-          { type: 'text', content: 'while(true) { love(chhavi); } ♾️' },
+          { type: 'text', content: 'I\\'m really glad we crossed paths ✨' },
+          { type: 'text', content: 'From internet strangers to my favorite person ❤️' },
+          { type: 'text', content: 'while(true) { smile(chhavi); } 😊' },
         ];
         notes.forEach((note, i) => {
           setTimeout(() => {
@@ -1245,10 +1245,10 @@ export default function App() {
     const overlay = document.createElement('div');
     overlay.className = 'diary-overlay';
     const entries = [
-      { date: 'The Beginning', text: "I saw a Reddit post about eyes. I didn't know then that they'd become my favorite sight in the world." },
-      { date: 'Getting Closer', text: "We started talking. Slowly, without even realizing it, I was falling for her." },
-      { date: 'The Realization', text: "I think I'm in love. Actually, I know I am." },
-      { date: 'Today', text: "I built her an entire world here. And I'd build a thousand more." },
+      { date: 'The Beginning', text: "Saw a random Reddit post today. Didn't expect much, but those eyes really caught my attention." },
+      { date: 'Getting Closer', text: "We've been talking a lot. I actually find myself smiling at my phone way too often now." },
+      { date: 'The Realization', text: "She's genuinely amazing. I really love her vibe." },
+      { date: 'Today', text: "I thought it would be fun to build a little something just for her. Hope it makes her smile." },
     ];
     overlay.innerHTML = `
       <div class="diary-book">
@@ -1454,7 +1454,7 @@ export default function App() {
     Object.assign(paper.style, { width: '80%', maxWidth: '500px', fontFamily: '"Courier New", Courier, monospace', fontSize: '18px', color: '#333', lineHeight: '2', fontWeight: 'bold' });
     overlay.appendChild(paper);
     
-    const text = `It started with a Reddit post about eyes.\nI never knew looking into them would become my favorite thing.\nSlowly, quietly, I fell completely in love.\n\n— Yours.`;
+    const text = `It's funny how things start.\nJust a random Reddit post about eyes,\nand now I can't imagine my days without talking to you.\n\nYou're pretty special.`;
     let i = 0;
     
     document.body.appendChild(overlay);
@@ -1503,8 +1503,8 @@ export default function App() {
         <img src="/chhavi-eyes.jpg" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='👀'; this.parentElement.style.fontSize='80px';" />
       </div>
       <div style="font-size: 24px; color: #fdf2f8; margin-top: 30px; font-weight: 500; text-align: center; max-width: 80%; line-height: 1.6; font-style: italic; text-shadow: 0 0 10px rgba(255,255,255,0.2)">
-        "I saw a post about eyes...<br/><br/>
-        <span style="font-size: 20px; color: #f472b6; transition: opacity 2s" id="eyes-text-2">And then I fell for the soul behind them."</span>
+        "It started with a post about eyes...<br/><br/>
+        <span style="font-size: 20px; color: #f472b6; transition: opacity 2s" id="eyes-text-2">And turned into my favorite conversation."</span>
       </div>
     `;
     document.body.appendChild(overlay);
