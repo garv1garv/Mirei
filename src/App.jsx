@@ -646,6 +646,30 @@ export default function App() {
         triggerAntiGravity();
         spawnFloatingText('You defy every law of my universe 🚀', '#a78bfa');
       },
+
+      // ═══ WAVE 3: NEW EASTER EGGS ═══
+
+      wife: () => {
+        if (!isChhavi()) return;
+        triggerWifeProposal();
+        spawnFloatingText('My future 💍', '#fde047');
+      },
+      smile: () => {
+        if (!isChhavi()) return;
+        triggerSmileRain();
+        spawnFloatingText('Your smile is my favorite 🥺', '#fef08a');
+      },
+      hug: () => {
+        if (!isChhavi()) return;
+        triggerVirtualHug();
+      },
+      hate: () => {
+        setIsChhavisVersion(false);
+        setRainHearts(false);
+        Storage.set('chhavisVersion', false);
+        setActiveTheme('modern-dark');
+        spawnFloatingText('💔 Normal mode restored 💔', '#9ca3af');
+      },
     };
 
     const handleKeyDown = (e) => {
@@ -1242,6 +1266,47 @@ export default function App() {
       }, i * 200);
     }
     setTimeout(() => document.body.classList.remove('anti-gravity-effect'), 6000);
+  };
+
+  // 💍 Wife Proposal
+  const triggerWifeProposal = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
+    overlay.innerHTML = `
+      <div style="font-size: 100px; animation: gentlePulse 2s infinite">💍</div>
+      <div style="font-size: 24px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%">I can't wait for the day I get to call you my wife.</div>
+    `;
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 10000);
+  };
+
+  // 🥺 Smile Rain
+  const triggerSmileRain = () => {
+    const smiles = ['🥺', '😊', '🥰', '😍', '😁', '🤗'];
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const s = document.createElement('div');
+        s.className = 'cute-rain-drop';
+        s.textContent = smiles[Math.floor(Math.random() * smiles.length)];
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.fontSize = (20 + Math.random() * 20) + 'px';
+        s.style.animationDuration = \`\${2 + Math.random() * 3}s\`;
+        s.style.animationDelay = \`\${Math.random() * 0.3}s\`;
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 6000);
+      }, i * 150);
+    }
+  };
+
+  // 🫂 Virtual Hug
+  const triggerVirtualHug = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(255,192,203,0.3)', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
+    overlay.innerHTML = \`<div style="font-size: 120px; animation: ambientFloat 3s infinite">🫂</div><div style="font-size: 28px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%; text-shadow: 0 2px 10px rgba(0,0,0,0.5)">Sending you the biggest, warmest hug right now.</div>\`;
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
   };
 
 
