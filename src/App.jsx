@@ -663,6 +663,29 @@ export default function App() {
         if (!isChhavi()) return;
         triggerVirtualHug();
       },
+      
+      // ═══ WAVE 4: MORE CREATIVE EASTER EGGS ═══
+      polaroid: () => {
+        if (!isChhavi()) return;
+        triggerPolaroid();
+      },
+      fireworks: () => {
+        if (!isChhavi()) return;
+        triggerFireworks();
+      },
+      lanterns: () => {
+        if (!isChhavi()) return;
+        triggerLanterns();
+      },
+      typewriter: () => {
+        if (!isChhavi()) return;
+        triggerTypewriter();
+      },
+      matcha: () => {
+        if (!isChhavi()) return;
+        triggerMatcha();
+      },
+
       hate: () => {
         setIsChhavisVersion(false);
         setRainHearts(false);
@@ -1304,6 +1327,153 @@ export default function App() {
     const overlay = document.createElement('div');
     Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(255,192,203,0.3)', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
     overlay.innerHTML = `<div style="font-size: 120px; animation: ambientFloat 3s infinite">🫂</div><div style="font-size: 28px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%; text-shadow: 0 2px 10px rgba(0,0,0,0.5)">Sending you the biggest, warmest hug right now.</div>`;
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
+  };
+
+  // 📸 Polaroid
+  const triggerPolaroid = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'all 0.8s' });
+    overlay.innerHTML = `
+      <div style="background: white; padding: 15px 15px 50px 15px; border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-5deg) scale(0); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: ambientFloat 4s infinite">
+        <div style="width: 280px; height: 280px; background: #e2e8f0; border-radius: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative">
+           <div style="font-size: 80px">👩‍❤️‍👨</div>
+        </div>
+        <div style="font-family: 'Playfair Display', serif; font-size: 20px; color: #333; text-align: center; margin-top: 15px; font-weight: bold; transform: rotate(-2deg)">Meeting You 💕</div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.children[0].style.transform = 'rotate(-5deg) scale(1)'; }, 100);
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
+  };
+
+  // 🎆 Fireworks
+  const triggerFireworks = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.6)', zIndex: '9998', pointerEvents: 'none', transition: 'opacity 1s' });
+    document.body.appendChild(overlay);
+    
+    const colors = ['#fbbf24', '#f472b6', '#38bdf8', '#a855f7', '#4ade80'];
+    for(let i=0; i<8; i++) {
+      setTimeout(() => {
+        const fw = document.createElement('div');
+        Object.assign(fw.style, { position: 'absolute', left: (20 + Math.random() * 60) + 'vw', top: (20 + Math.random() * 50) + 'vh' });
+        
+        for(let j=0; j<20; j++) {
+          const spark = document.createElement('div');
+          const angle = (j * 18) * Math.PI / 180;
+          const dist = 50 + Math.random() * 100;
+          Object.assign(spark.style, {
+            position: 'absolute', width: '6px', height: '6px', borderRadius: '50%',
+            background: colors[Math.floor(Math.random() * colors.length)],
+            boxShadow: '0 0 8px currentColor',
+            left: '0', top: '0',
+            transition: 'all 1s ease-out', opacity: '1'
+          });
+          fw.appendChild(spark);
+          
+          setTimeout(() => {
+            spark.style.transform = \`translate(\${Math.cos(angle)*dist}px, \${Math.sin(angle)*dist}px)\`;
+            spark.style.opacity = '0';
+          }, 50);
+        }
+        overlay.appendChild(fw);
+        setTimeout(() => fw.remove(), 1200);
+      }, i * 800);
+    }
+    
+    setTimeout(() => {
+      const msg = document.createElement('div');
+      Object.assign(msg.style, { position: 'absolute', width: '100%', top: '50%', transform: 'translateY(-50%)', textAlign: 'center', color: 'white', fontSize: '32px', fontWeight: 'bold', textShadow: '0 0 20px #ff85a1', animation: 'gentlePulse 2s infinite' });
+      msg.textContent = 'You light up my life 🎆';
+      overlay.appendChild(msg);
+    }, 2000);
+    
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1000); }, 8000);
+  };
+
+  // 🏮 Lanterns
+  const triggerLanterns = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'linear-gradient(to top, rgba(15,23,42,0.9), rgba(0,0,0,0.5))', zIndex: '9999', overflow: 'hidden', pointerEvents: 'none', transition: 'opacity 1s' });
+    
+    for(let i=0; i<25; i++) {
+      setTimeout(() => {
+        const l = document.createElement('div');
+        l.textContent = '🏮';
+        Object.assign(l.style, {
+          position: 'absolute', left: (Math.random() * 100) + 'vw', bottom: '-50px',
+          fontSize: (20 + Math.random() * 30) + 'px', filter: 'drop-shadow(0 0 15px #fde047)',
+          transition: \`all \${6 + Math.random()*5}s linear\`, opacity: 0.8 + Math.random()*0.2
+        });
+        overlay.appendChild(l);
+        
+        setTimeout(() => {
+          l.style.bottom = '120vh';
+          l.style.left = \`calc(\${l.style.left} + \${(Math.random() - 0.5) * 100}px)\`;
+        }, 50);
+      }, i * 300);
+    }
+    
+    setTimeout(() => {
+      const msg = document.createElement('div');
+      Object.assign(msg.style, { position: 'absolute', width: '100%', top: '40%', textAlign: 'center', color: '#fef08a', fontSize: '28px', fontStyle: 'italic', textShadow: '0 0 15px #fde047', opacity: '0', transition: 'opacity 2s' });
+      msg.textContent = 'You are my new dream... ✨';
+      overlay.appendChild(msg);
+      setTimeout(() => msg.style.opacity = '1', 100);
+    }, 3000);
+    
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1000); }, 10000);
+  };
+
+  // 📜 Typewriter
+  const triggerTypewriter = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(255,250,240,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 1s' });
+    
+    const paper = document.createElement('div');
+    Object.assign(paper.style, { width: '80%', maxWidth: '500px', fontFamily: '"Courier New", Courier, monospace', fontSize: '18px', color: '#333', lineHeight: '2', fontWeight: 'bold' });
+    overlay.appendChild(paper);
+    
+    const text = "Every great story needs a muse.\\nMine just happens to have the most beautiful smile\\nin the entire world.\\n\\n— To my favorite person.";
+    let i = 0;
+    
+    document.body.appendChild(overlay);
+    
+    const typeWriter = () => {
+      if (i < text.length) {
+        if (text.charAt(i) === '\\n') {
+          paper.innerHTML += '<br/>';
+        } else {
+          paper.innerHTML += text.charAt(i);
+        }
+        i++;
+        setTimeout(typeWriter, 50 + Math.random() * 50);
+      }
+    };
+    
+    setTimeout(typeWriter, 500);
+    
+    overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1000); });
+    setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 1000); }, 12000);
+  };
+
+  // 🍵 Matcha
+  const triggerMatcha = () => {
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(220, 252, 231, 0.8)', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
+    overlay.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 20px; font-size: 80px; animation: gentlePulse 2s infinite">
+        <div>🍵</div>
+        <div style="font-size: 50px; color: #166534">💕</div>
+        <div>☕</div>
+      </div>
+      <div style="font-size: 28px; color: #166534; margin-top: 20px; font-weight: bold; text-align: center; text-shadow: 0 2px 10px rgba(0,0,0,0.1)">Our perfect blend.</div>
+    `;
     overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
     document.body.appendChild(overlay);
     setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
