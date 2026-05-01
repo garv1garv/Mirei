@@ -696,6 +696,10 @@ export default function App() {
     };
 
     const handleKeyDown = (e) => {
+      if (e.key === 'Backspace') {
+        keys = keys.slice(0, -1);
+        return;
+      }
       if (e.key && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         keys += e.key.toLowerCase();
         if (keys.length > 40) keys = keys.slice(-40);
@@ -1439,14 +1443,14 @@ export default function App() {
     Object.assign(paper.style, { width: '80%', maxWidth: '500px', fontFamily: '"Courier New", Courier, monospace', fontSize: '18px', color: '#333', lineHeight: '2', fontWeight: 'bold' });
     overlay.appendChild(paper);
     
-    const text = "Every great story needs a muse.\\nMine just happens to have the most beautiful smile\\nin the entire world.\\n\\n— To my favorite person.";
+    const text = `Every great story needs a muse.\nMine just happens to have the most beautiful smile\nin the entire world.\n\n— To my favorite person.`;
     let i = 0;
     
     document.body.appendChild(overlay);
     
     const typeWriter = () => {
       if (i < text.length) {
-        if (text.charAt(i) === '\\n') {
+        if (text.charAt(i) === '\n') {
           paper.innerHTML += '<br/>';
         } else {
           paper.innerHTML += text.charAt(i);
