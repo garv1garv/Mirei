@@ -503,14 +503,14 @@ export default function App() {
       sparkle: () => {
         if (!isChhavi()) return;
         triggerSparkleTrail();
-        spawnFloatingText('You\\'ve got that magic touch ✨', '#fbbf24');
+        spawnFloatingText("You've got that magic touch ✨", '#fbbf24');
       },
 
       // 🌹 Rose petals gently fall from the top
       jaan: () => {
         if (!isChhavi()) return;
         triggerRosePetals();
-        spawnFloatingText('You\\'re pretty amazing 🌹', '#f43f5e');
+        spawnFloatingText("You're pretty amazing 🌹", '#f43f5e');
       },
 
       // 💫 Her name appears as a constellation
@@ -542,7 +542,7 @@ export default function App() {
       galaxy: () => {
         if (!isChhavi()) return;
         triggerGalaxySwirl();
-        spawnFloatingText('You\\'re out of this world 🌌', '#a78bfa');
+        spawnFloatingText("You're out of this world 🌌", '#a78bfa');
       },
       
       // 🌈 Rainbow wave washes across the screen
@@ -620,7 +620,7 @@ export default function App() {
       ocean: () => {
         if (!isChhavi()) return;
         triggerOceanWaves();
-        spawnFloatingText('You\\'re deep in the best way 🌊', '#38bdf8');
+        spawnFloatingText("You're deep in the best way 🌊", '#38bdf8');
       },
 
       blanket: () => {
