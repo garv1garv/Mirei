@@ -1291,8 +1291,8 @@ export default function App() {
         s.textContent = smiles[Math.floor(Math.random() * smiles.length)];
         s.style.left = Math.random() * 100 + 'vw';
         s.style.fontSize = (20 + Math.random() * 20) + 'px';
-        s.style.animationDuration = \`\${2 + Math.random() * 3}s\`;
-        s.style.animationDelay = \`\${Math.random() * 0.3}s\`;
+        s.style.animationDuration = `${2 + Math.random() * 3}s`;
+        s.style.animationDelay = `${Math.random() * 0.3}s`;
         document.body.appendChild(s);
         setTimeout(() => s.remove(), 6000);
       }, i * 150);
@@ -1303,7 +1303,7 @@ export default function App() {
   const triggerVirtualHug = () => {
     const overlay = document.createElement('div');
     Object.assign(overlay.style, { position: 'fixed', inset: '0', background: 'rgba(255,192,203,0.3)', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: '9999', transition: 'opacity 0.8s' });
-    overlay.innerHTML = \`<div style="font-size: 120px; animation: ambientFloat 3s infinite">🫂</div><div style="font-size: 28px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%; text-shadow: 0 2px 10px rgba(0,0,0,0.5)">Sending you the biggest, warmest hug right now.</div>\`;
+    overlay.innerHTML = `<div style="font-size: 120px; animation: ambientFloat 3s infinite">🫂</div><div style="font-size: 28px; color: white; margin-top: 20px; font-weight: 600; text-align: center; max-width: 80%; text-shadow: 0 2px 10px rgba(0,0,0,0.5)">Sending you the biggest, warmest hug right now.</div>`;
     overlay.addEventListener('click', () => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); });
     document.body.appendChild(overlay);
     setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 800); }, 8000);
