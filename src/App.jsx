@@ -444,7 +444,7 @@ export default function App() {
   // Easter Egg Listener — Global Secret Codes
   useEffect(() => {
     let keys = '';
-    const isChhavi = () => currentUser === 'chhavi' || currentUser === null;
+    const isChhavi = () => true; // Always allow easter eggs regardless of user or rain
     
     const secrets = {
       // Main cinematic sequence — works for everyone, triggers from ANYWHERE
